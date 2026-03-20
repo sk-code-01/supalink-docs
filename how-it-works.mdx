@@ -1,26 +1,42 @@
 ---
 title: How It Works
-description: The architecture behind Supalink's instant publishing
+description: Security, reliability, and the publish flow
 ---
 
-## Architecture
+## Built for trust
 
-Supalink runs entirely on Cloudflare's edge infrastructure:
+Supalink is designed with security and reliability at every layer.
 
-- **Cloudflare Workers** — Handles all API requests and site serving
-- **Cloudflare R2** — Object storage for published files (S3-compatible, zero egress fees)
-- **Cloudflare D1** — SQLite database for site metadata, users, and versions
-- **Cloudflare KV** — Session storage and rate limiting
+<CardGroup cols={2}>
+  <Card title="Edge-first" icon="globe">
+    Every request is served from the nearest edge location across 300+ cities. No origin servers, no single point of failure.
+  </Card>
+  <Card title="Encrypted at rest" icon="lock">
+    All files are encrypted at rest in storage. SSL/TLS is enforced on every connection.
+  </Card>
+  <Card title="Presigned uploads" icon="shield-check">
+    Files are uploaded directly to secure storage using time-limited, single-use presigned URLs. Upload tokens expire after 1 hour.
+  </Card>
+  <Card title="Zero egress fees" icon="money-bill">
+    Serving your site costs nothing. No bandwidth charges, no surprise bills, no matter how much traffic you get.
+  </Card>
+</CardGroup>
 
-Every request is handled at the edge, close to the user. There are no origin servers.
+### Authentication & data protection
+
+- **No passwords stored** — authentication uses one-time email verification codes
+- **API keys are hashed** — only the SHA-256 hash is stored, never the raw key
+- **Site passwords are hashed** — password-protected sites use server-side hashing
+- **Rate limiting** — every endpoint is rate-limited per user and per IP to prevent abuse
+- **Claim tokens are single-use** — anonymous site claim tokens cannot be reused
 
 ## The Publish Flow
 
-When you publish a directory, three things happen:
+When an agent publishes a directory, three things happen:
 
-### 1. Create (file manifest)
+### 1. Create
 
-Your client sends a JSON manifest listing every file: path, size, content type, and SHA-256 hash.
+The agent sends a JSON manifest listing every file — path, size, content type, and SHA-256 hash.
 
 ```json
 {
@@ -31,39 +47,39 @@ Your client sends a JSON manifest listing every file: path, size, content type, 
 }
 ```
 
-The API creates a new **version** for the site and returns presigned upload URLs for each file.
+The API creates a new **version** and returns presigned upload URLs for each file.
 
-### 2. Upload (direct to R2)
+### 2. Upload
 
-Each file is uploaded directly to R2 using the presigned URL. The upload goes straight to storage — no proxying through the Worker for large files.
+Each file is uploaded directly to secure storage using the presigned URL. Uploads go straight to storage — no middleman.
 
 Upload URLs expire after **1 hour**.
 
 ### 3. Finalize
 
-After all files are uploaded, a finalize call tells the API to make the new version live. The API verifies every file exists in R2 before activating.
+After all files are uploaded, a finalize call makes the new version live. The API verifies every file exists before activating.
 
-The old version (if updating) is marked as `superseded`. The new version becomes `active`.
+The old version (if updating) is replaced. The new version becomes `active`.
 
 ## Site Serving
 
 When someone visits `slug.supalink.dev`:
 
-1. The Worker extracts the subdomain (`slug`)
-2. Looks up the site in D1 to find the active version
-3. Fetches the requested file from R2 at `sites/{slug}/{versionId}/{path}`
-4. Returns it with appropriate caching headers
+1. The request hits the nearest edge location
+2. The site's active version is resolved
+3. The requested file is fetched from storage
+4. It's returned with appropriate caching headers
 
-If the requested path doesn't have an extension, the Worker tries `path/index.html` as a fallback (SPA-friendly serving).
+If the requested path doesn't have an extension, `path/index.html` is tried as a fallback — so SPAs and clean URLs work out of the box.
 
 ## Hash Deduplication
 
 When you update a site, files that haven't changed don't need to be re-uploaded:
 
-1. You send file hashes in the manifest
-2. The API compares them against the previous version's file hashes
-3. Matching files are copied server-side in R2 (zero-cost copy)
-4. Only new or changed files need to be uploaded
+1. The agent sends file hashes in the manifest
+2. The API compares them against the previous version
+3. Matching files are copied server-side (instant, zero cost)
+4. Only new or changed files need uploading
 
 This makes updates fast — even for large sites, you typically only upload the files you changed.
 
@@ -71,7 +87,7 @@ This makes updates fast — even for large sites, you typically only upload the 
 
 Every site gets a random slug like `bright-canvas-a7k2`. Slugs are:
 
-- Generated using a `adjective-noun-xxxx` pattern
+- Generated using an `adjective-noun-xxxx` pattern
 - Globally unique
 - Permanent (even if the site is deleted, the slug is never reused)
 
