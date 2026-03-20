@@ -1,0 +1,74 @@
+---
+title: Plans & Limits
+description: Compare Free and Hobby plans
+---
+
+## Plans
+
+Supalink offers two plans:
+
+<CardGroup cols={2}>
+  <Card title="Free" icon="gift">
+    **$0/month** — Perfect for getting started.
+    - 500 sites
+    - 10 GB storage
+    - 250 MB max file size
+    - 1,000 files per site
+    - 1 custom domain
+    - 60 API requests/hour
+  </Card>
+  <Card title="Hobby" icon="rocket">
+    **$4/month** — For serious projects.
+    - Unlimited sites
+    - 100 GB storage
+    - 5 GB max file size
+    - 1,000 files per site
+    - 5 custom domains
+    - 200 API requests/hour
+    - Custom handle
+  </Card>
+</CardGroup>
+
+## Detailed Comparison
+
+| Feature | Free | Hobby |
+|---------|------|-------|
+| **Sites** | 500 | Unlimited |
+| **Storage** | 10 GB | 100 GB |
+| **Max file size** | 250 MB | 5 GB |
+| **Files per site** | 1,000 | 1,000 |
+| **Custom domains** | 1 | 5 |
+| **Handle** | No | Yes |
+| **API rate limit** | 60 req/hr | 200 req/hr |
+| **Price** | $0 | $4/month |
+
+## Anonymous Publishing Limits
+
+Publishing without an API key has tighter limits:
+
+| Feature | Limit |
+|---------|-------|
+| Rate limit | 5 requests/hour per IP |
+| Site expiry | 24 hours |
+| Custom domains | Not available |
+| Handle | Not available |
+
+## Upgrading
+
+You can upgrade to Hobby from your dashboard:
+
+1. Go to [supalink.dev/dashboard](https://supalink.dev/dashboard)
+2. Click the **Plan** tab
+3. Click **Upgrade to Hobby**
+4. Complete payment via LemonSqueezy
+
+Your limits are upgraded immediately after payment.
+
+## What Happens If You Hit a Limit?
+
+- **Site limit exceeded** — You'll receive a `SITE_LIMIT_EXCEEDED` error. Delete unused sites or upgrade.
+- **Storage exceeded** — You'll receive a `STORAGE_EXCEEDED` error. Delete unused sites to free space or upgrade.
+- **File too large** — You'll receive a `FILE_TOO_LARGE` error. Compress the file or upgrade for higher limits.
+- **Rate limited** — You'll receive a `RATE_LIMITED` error. Wait for the reset window or upgrade.
+
+All limits are enforced per-account, not per-site.

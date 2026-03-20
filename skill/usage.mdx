@@ -1,0 +1,101 @@
+---
+title: Usage
+description: How to use the Supalink skill with your AI agent
+---
+
+## Natural Language
+
+Just tell your agent what to publish. The skill triggers automatically on phrases like:
+
+- "Publish this project"
+- "Deploy my dist folder"
+- "Give me a live URL for this"
+- "Host this HTML file"
+- "Make this site live"
+- "Share this as a website"
+- "Update my site"
+
+## Slash Command
+
+You can also invoke the skill directly:
+
+```
+/supalink ./dist
+```
+
+Or without arguments (the skill will auto-detect what to publish):
+
+```
+/supalink
+```
+
+## Examples
+
+### Publish a project
+
+```
+You: "Publish my project to the web"
+
+Agent: I'll publish the ./dist directory to Supalink.
+       📦 Scanning files... Found 15 files
+       ⬆️  Uploading 15 files...
+       ✅ Published!
+
+       🔗 https://bright-canvas-a7k2.supalink.dev/
+```
+
+### Update an existing site
+
+```
+You: "Update my site with the latest changes"
+
+Agent: I'll update bright-canvas-a7k2 with the new build.
+       📦 Scanning files... Found 15 files
+       Skipped 12 files (unchanged)
+       ⬆️  Uploading 3 files...
+       ✅ Updated!
+
+       🔗 https://bright-canvas-a7k2.supalink.dev/
+```
+
+### First-time setup
+
+```
+You: "Publish this site"
+
+Agent: You need a Supalink API key for permanent publishing.
+       Would you like me to set one up? I'll need your email address.
+
+You: "yes, use me@example.com"
+
+Agent: I've sent a verification code to me@example.com.
+       Please check your email and paste the XXXX-XXXX code.
+
+You: "ABCD-1234"
+
+Agent: ✅ Authenticated! Your API key is set.
+       Now publishing...
+       🔗 https://bright-canvas-a7k2.supalink.dev/
+```
+
+## Auto-Detection
+
+When you don't specify a directory, the skill looks for common build outputs:
+
+1. `dist/` — Vite, Rollup, Parcel
+2. `build/` — Create React App, Webpack
+3. `out/` — Next.js static export
+4. `public/` — Static files
+5. `.next/out/` — Next.js
+
+If none are found, the agent asks you what to publish.
+
+## Tips
+
+<Tip>
+Set `SUPALINK_API_KEY` in your shell profile so the skill can publish permanently without asking for authentication each time.
+</Tip>
+
+- The skill remembers the slug from the last publish in the conversation, so "update my site" works without specifying the slug again
+- You can publish single files too — the skill creates a temporary directory automatically
+- The skill works with any file type: HTML, images, PDFs, videos, ZIP files, etc.

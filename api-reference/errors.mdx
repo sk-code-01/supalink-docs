@@ -1,0 +1,82 @@
+---
+title: Errors
+description: Error codes and response format
+---
+
+## Error Response Format
+
+All API errors return JSON with a consistent structure:
+
+```json
+{
+  "error": "Description of what went wrong",
+  "code": "ERROR_CODE",
+  "status": 400
+}
+```
+
+## Error Codes
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `INVALID_REQUEST` | 400 | Request validation failed — missing or invalid fields |
+| `INVALID_PATH` | 400 | File path validation failed (contains `..`, starts with `/`, etc.) |
+| `INVALID_HASH` | 400 | Hash is not a valid 64-character lowercase hex string |
+| `UNAUTHORIZED` | 401 | Missing, invalid, or expired API key |
+| `NOT_FOUND` | 404 | Resource not found or not owned by the authenticated user |
+| `RATE_LIMITED` | 429 | Rate limit exceeded — check `X-RateLimit-Reset` header |
+| `FILE_TOO_LARGE` | 413 | Individual file exceeds plan limit (250 MB free, 5 GB hobby) |
+| `STORAGE_EXCEEDED` | 413 | Total storage quota exceeded (10 GB free, 100 GB hobby) |
+| `SITE_LIMIT_EXCEEDED` | 403 | Maximum site count reached (500 for free plan) |
+| `PLAN_LIMIT` | 403 | Feature not available on current plan |
+| `INTERNAL_ERROR` | 500 | Unexpected server error |
+
+## Common Scenarios
+
+### Invalid API Key
+
+```json
+{
+  "error": "Invalid API key",
+  "code": "UNAUTHORIZED",
+  "status": 401
+}
+```
+
+**Fix:** Check that your API key starts with `sl_live_` and is complete (no truncation).
+
+### Rate Limited
+
+```json
+{
+  "error": "Rate limit exceeded. Try again later.",
+  "code": "RATE_LIMITED",
+  "status": 429
+}
+```
+
+**Fix:** Wait until the time indicated by the `X-RateLimit-Reset` header. See [Rate Limits](/api-reference/rate-limits).
+
+### Storage Exceeded
+
+```json
+{
+  "error": "Storage quota exceeded. Current usage: 9.8 GB of 10 GB.",
+  "code": "STORAGE_EXCEEDED",
+  "status": 413
+}
+```
+
+**Fix:** Delete unused sites to free storage, or upgrade to the Hobby plan for 100 GB.
+
+### File Path Invalid
+
+```json
+{
+  "error": "Invalid file path: ../etc/passwd",
+  "code": "INVALID_PATH",
+  "status": 400
+}
+```
+
+**Fix:** File paths must be relative (no leading `/`), cannot contain `..`, and must be under 500 characters.

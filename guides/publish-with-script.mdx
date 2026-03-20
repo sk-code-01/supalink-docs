@@ -1,0 +1,111 @@
+---
+title: Publish with Script
+description: Use publish.sh to publish directories from the command line
+---
+
+## The Publish Script
+
+`publish.sh` is a self-contained bash script that handles the entire publish flow: scanning files, computing hashes, uploading, and finalizing.
+
+## Download
+
+```bash
+curl -fsSL https://supalink.dev/publish.sh -o publish.sh && chmod +x publish.sh
+```
+
+## Requirements
+
+- `curl` — for HTTP requests
+- `jq` — for JSON parsing
+- `shasum` or `sha256sum` — for file hashing (pre-installed on macOS and most Linux)
+
+## Usage
+
+### Publish a new site
+
+```bash
+./publish.sh ./my-directory
+```
+
+### Update an existing site
+
+```bash
+./publish.sh ./my-directory existing-slug
+```
+
+### With authentication (permanent sites)
+
+```bash
+export SUPALINK_API_KEY="sl_live_your_key_here"
+./publish.sh ./dist
+```
+
+### Custom API base URL
+
+```bash
+export SUPALINK_BASE="https://supalink.dev"
+./publish.sh ./dist
+```
+
+## What the Script Does
+
+<Steps>
+  <Step title="Scan files">
+    Recursively finds all files in the directory and builds a JSON manifest with relative paths, sizes, content types, and SHA-256 hashes.
+  </Step>
+  <Step title="Create or update">
+    Sends the manifest to `POST /api/v1/publish` (new site) or `PUT /api/v1/publish/:slug` (update).
+  </Step>
+  <Step title="Upload files">
+    Uploads each file to its presigned URL. Files that match by hash are skipped automatically.
+  </Step>
+  <Step title="Finalize">
+    Calls the finalize endpoint to make the site live.
+  </Step>
+</Steps>
+
+## Output
+
+```
+📦 Scanning files...
+  Found 12 file(s)
+🚀 Creating site...
+  Site: bright-canvas-a7k2
+  Skipped (dedup): 0 file(s)
+⬆️  Uploading 12 file(s)...
+  [1/12] index.html
+  [2/12] style.css
+  ...
+✅ Finalizing...
+
+🎉 Published!
+   URL:  https://bright-canvas-a7k2.supalink.dev/
+   Slug: bright-canvas-a7k2
+```
+
+## Supported File Types
+
+The script automatically detects content types for common file extensions:
+
+| Category | Extensions |
+|----------|-----------|
+| Web | `.html`, `.css`, `.js`, `.json`, `.xml`, `.svg` |
+| Images | `.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.avif`, `.ico` |
+| Fonts | `.woff`, `.woff2`, `.ttf`, `.otf` |
+| Media | `.mp4`, `.webm`, `.mp3`, `.ogg`, `.wav` |
+| Documents | `.pdf`, `.txt`, `.md`, `.csv` |
+| Other | `.zip` and any unrecognized extension (`application/octet-stream`) |
+
+## CI/CD Integration
+
+You can use the script in any CI/CD pipeline:
+
+```yaml
+# GitHub Actions example
+- name: Publish to Supalink
+  env:
+    SUPALINK_API_KEY: ${{ secrets.SUPALINK_API_KEY }}
+  run: |
+    curl -fsSL https://supalink.dev/publish.sh -o publish.sh && chmod +x publish.sh
+    ./publish.sh ./dist
+```

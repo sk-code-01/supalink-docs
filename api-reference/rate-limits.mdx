@@ -1,0 +1,52 @@
+---
+title: Rate Limits
+description: API rate limits per plan
+---
+
+## Rate Limit Headers
+
+Every API response includes rate limit information:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Maximum requests allowed per hour |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset` | Unix timestamp when the window resets |
+
+## Limits by Plan
+
+| Plan | Requests per Hour |
+|------|-------------------|
+| Anonymous (no API key) | 5 per IP address |
+| Free | 60 |
+| Hobby ($4/mo) | 200 |
+
+The rate limit window is **1 hour**, aligned to the top of the hour.
+
+## When You Hit the Limit
+
+You'll receive a `429` response:
+
+```json
+{
+  "error": "Rate limit exceeded. Try again later.",
+  "code": "RATE_LIMITED",
+  "status": 429
+}
+```
+
+Check the `X-RateLimit-Reset` header for when you can retry.
+
+## Exempt Endpoints
+
+File upload endpoints (`PUT /api/v1/_upload/*`) are **not rate limited**. They are already gated by upload tokens and expiry timestamps.
+
+## Tips
+
+<Tip>
+If you're hitting rate limits on the Free plan, consider upgrading to Hobby ($4/mo) for 200 requests per hour — more than enough for most workflows.
+</Tip>
+
+- Batch your operations where possible
+- Use hash deduplication to reduce the number of API calls when updating sites
+- The publish script handles everything in a single create → upload → finalize flow

@@ -1,0 +1,70 @@
+---
+title: Introduction
+description: Instant web hosting for developers and AI agents
+---
+
+# What is Supalink?
+
+Supalink is instant static web hosting. Publish any file or folder and get a live URL in seconds.
+
+```bash
+./publish.sh ./dist
+# => https://bright-canvas-a7k2.supalink.dev/
+```
+
+Every site gets a unique slug and is served from a global CDN via Cloudflare.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Instant Publishing" icon="rocket">
+    Publish any directory to a live URL. HTML, CSS, JS, images, PDFs, videos — any static file.
+  </Card>
+  <Card title="Zero Config" icon="wand-magic-sparkles">
+    No build pipeline, no CI/CD setup, no server config. Just publish and go.
+  </Card>
+  <Card title="Agent-Native" icon="robot">
+    Built for AI agents. Install the Claude Code skill and publish from any conversation.
+  </Card>
+  <Card title="Hash Deduplication" icon="bolt">
+    On updates, only changed files are uploaded. Unchanged files are copied server-side.
+  </Card>
+  <Card title="Custom Domains" icon="globe">
+    Point your own domain to any Supalink site with automatic SSL.
+  </Card>
+  <Card title="Anonymous Publishing" icon="ghost">
+    No account needed. Publish anonymously with a 24-hour expiry. Claim later to keep it.
+  </Card>
+</CardGroup>
+
+## How It Works
+
+Publishing is a 3-step process:
+
+<Steps>
+  <Step title="Create">
+    Send your file manifest to the API. You get back upload URLs for each file.
+  </Step>
+  <Step title="Upload">
+    Upload each file to its presigned URL. Files go directly to Cloudflare R2 storage.
+  </Step>
+  <Step title="Finalize">
+    Tell the API you're done. Your site goes live instantly at `slug.supalink.dev`.
+  </Step>
+</Steps>
+
+The `publish.sh` script handles all three steps automatically.
+
+## Quick Links
+
+<CardGroup cols={3}>
+  <Card title="Quickstart" icon="play" href="/quickstart">
+    Publish your first site in under a minute.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    Full REST API documentation.
+  </Card>
+  <Card title="Agent Skill" icon="robot" href="/skill/overview">
+    Install the Claude Code skill.
+  </Card>
+</CardGroup>

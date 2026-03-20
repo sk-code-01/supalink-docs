@@ -1,0 +1,113 @@
+---
+title: Authentication
+description: Get an API key via email verification
+---
+
+## How Authentication Works
+
+Supalink uses **email-based authentication**. There are no passwords — you verify your email with a one-time code and receive an API key.
+
+The API key is used for all authenticated requests via the `Authorization` header:
+
+```
+Authorization: Bearer sl_live_your_api_key_here
+```
+
+## Request a Verification Code
+
+Send a verification code to an email address.
+
+<ParamField body="email" type="string" required>
+  The email address to send the code to.
+</ParamField>
+
+```bash
+curl -X POST https://supalink.dev/api/auth/agent/request-code \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@example.com"}'
+```
+
+### Response
+
+```json
+{
+  "message": "Verification code sent to your email",
+  "email": "you@example.com",
+  "expiresInSeconds": 600
+}
+```
+
+The code expires in **10 minutes**. It arrives as an email with the format `XXXX-XXXX` (letters and numbers).
+
+## Verify Code and Get API Key
+
+Exchange the verification code for an API key.
+
+<ParamField body="email" type="string" required>
+  The same email address you requested the code for.
+</ParamField>
+
+<ParamField body="code" type="string" required>
+  The verification code from your email (format: `XXXX-XXXX`).
+</ParamField>
+
+```bash
+curl -X POST https://supalink.dev/api/auth/agent/verify-code \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@example.com", "code": "ABCD-1234"}'
+```
+
+### Response
+
+<CodeGroup>
+```json Existing User (200)
+{
+  "message": "Verified! Here is your API key.",
+  "apiKey": "sl_live_1981ecdf8dbb8c20c7da2b068ccbc12a",
+  "email": "you@example.com",
+  "plan": "free",
+  "isNewUser": false,
+  "warning": "IMPORTANT: Save this API key now. It is shown only once and cannot be retrieved later."
+}
+```
+
+```json New User (201)
+{
+  "message": "Verified! Here is your API key.",
+  "apiKey": "sl_live_a4f2e8c9b1d3f6e7a0c5d2b4e8f1a3c6",
+  "email": "you@example.com",
+  "plan": "free",
+  "isNewUser": true,
+  "warning": "IMPORTANT: Save this API key now. It is shown only once and cannot be retrieved later."
+}
+```
+</CodeGroup>
+
+<Warning>
+The API key is displayed **only once**. Save it immediately. If you lose it, you'll need to verify your email again to generate a new one (the old key is invalidated).
+</Warning>
+
+## Using the API Key
+
+Set it as an environment variable:
+
+```bash
+export SUPALINK_API_KEY="sl_live_your_key_here"
+```
+
+Or pass it directly in requests:
+
+```bash
+curl -X GET https://supalink.dev/api/v1/publishes \
+  -H "Authorization: Bearer sl_live_your_key_here"
+```
+
+## API Key Format
+
+API keys follow this pattern:
+
+```
+sl_live_ + 32 lowercase hex characters
+```
+
+Example: `sl_live_1981ecdf8dbb8c20c7da2b068ccbc12a`

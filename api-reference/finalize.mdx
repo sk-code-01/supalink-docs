@@ -1,0 +1,66 @@
+---
+title: Finalize
+description: POST /api/v1/publish/:slug/finalize — Make a site live
+---
+
+## Finalize a Site
+
+After uploading all files, call finalize to make the site live. The API verifies every file has been uploaded to storage before activating the version.
+
+```
+POST /api/v1/publish/:slug/finalize
+```
+
+### Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The site slug (e.g., `bright-canvas-a7k2`).
+</ParamField>
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | `application/json` |
+| `Authorization` | Conditional | Required for authenticated sites. Not needed for anonymous sites. |
+
+### Request Body
+
+<ParamField body="versionId" type="string" required>
+  The version ID from the create/update response at `upload.versionId`.
+</ParamField>
+
+### Example
+
+```bash
+curl -X POST https://supalink.dev/api/v1/publish/bright-canvas-a7k2/finalize \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sl_live_your_key_here" \
+  -d '{"versionId": "01jm4abc123def456"}'
+```
+
+### Response (200)
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+  "versionId": "01jm4abc123def456",
+  "status": "active"
+}
+```
+
+The site is now live at the `siteUrl`.
+
+### Errors
+
+| Status | Code | Reason |
+|--------|------|--------|
+| 404 | `NOT_FOUND` | Site not found |
+| 401 | `UNAUTHORIZED` | Not authorized to finalize this site |
+| 400 | `INVALID_REQUEST` | `versionId` doesn't match the pending version |
+| 400 | `INVALID_REQUEST` | Not all files have been uploaded |
+
+<Warning>
+Finalize will fail if any file in the manifest hasn't been uploaded yet. Make sure all uploads complete before calling finalize.
+</Warning>

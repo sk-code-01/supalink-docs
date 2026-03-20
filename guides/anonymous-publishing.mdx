@@ -1,0 +1,81 @@
+---
+title: Anonymous Publishing
+description: Publish without an account — sites expire in 24 hours
+---
+
+## How It Works
+
+You can publish to Supalink without an API key. Anonymous sites:
+
+- Are live immediately at `slug.supalink.dev`
+- **Expire in 24 hours** automatically
+- Come with a **claim token** to make them permanent later
+- Are rate limited to **5 requests per hour** per IP
+
+## Publish Anonymously
+
+### With the script
+
+Just don't set `SUPALINK_API_KEY`:
+
+```bash
+./publish.sh ./my-site
+```
+
+### With the API
+
+Omit the `Authorization` header:
+
+```bash
+curl -X POST https://supalink.dev/api/v1/publish \
+  -H "Content-Type: application/json" \
+  -d '{
+    "files": [
+      {"path": "index.html", "size": 512, "contentType": "text/html"}
+    ]
+  }'
+```
+
+### Response
+
+The response includes extra fields for anonymous publishes:
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+  "claimToken": "550e8400-e29b-41d4-a716-446655440000",
+  "claimUrl": "https://supalink.dev/claim?slug=bright-canvas-a7k2&token=550e8400...",
+  "expiresAt": "2026-03-21T20:00:00.000Z",
+  "anonymous": true,
+  "warning": "IMPORTANT: Save the claimToken and claimUrl. Returned only once.",
+  "upload": { ... }
+}
+```
+
+<Warning>
+**Save the `claimToken` immediately.** It is returned only once and cannot be retrieved later. You need it to claim the site.
+</Warning>
+
+## Claim a Site
+
+To make an anonymous site permanent, claim it with your API key and the claim token:
+
+```bash
+curl -X POST https://supalink.dev/api/v1/publish/bright-canvas-a7k2/claim \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sl_live_your_key_here" \
+  -d '{"claimToken": "550e8400-e29b-41d4-a716-446655440000"}'
+```
+
+After claiming:
+- The site no longer expires
+- It appears in your dashboard
+- You can update, delete, and manage it normally
+
+## Use Cases
+
+- **Quick demos** — Share a prototype without signing up
+- **CI previews** — Generate deploy previews in PRs
+- **One-off sharing** — Share a file for a day, it cleans up automatically
+- **Try before committing** — Test Supalink before creating an account

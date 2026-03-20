@@ -1,0 +1,99 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Supalink",
+  "logo": {
+    "dark": "/images/logo-dark.svg",
+    "light": "/images/logo-light.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#000000",
+    "light": "#555555",
+    "dark": "#ffffff",
+    "background": {
+      "dark": "#0a0a0a",
+      "light": "#ffffff"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Dashboard",
+      "url": "https://supalink.dev/dashboard"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://supalink.dev"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    },
+    {
+      "name": "Guides",
+      "url": "guides"
+    },
+    {
+      "name": "Agent Skill",
+      "url": "skill"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart",
+        "how-it-works"
+      ]
+    },
+    {
+      "group": "API Reference",
+      "pages": [
+        "api-reference/overview",
+        "api-reference/authentication",
+        "api-reference/publish",
+        "api-reference/upload",
+        "api-reference/finalize",
+        "api-reference/update",
+        "api-reference/list-sites",
+        "api-reference/get-site",
+        "api-reference/delete-site",
+        "api-reference/duplicate-site",
+        "api-reference/update-metadata",
+        "api-reference/claim-site",
+        "api-reference/errors",
+        "api-reference/rate-limits"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/publish-with-script",
+        "guides/custom-domains",
+        "guides/handle",
+        "guides/anonymous-publishing",
+        "guides/hash-deduplication",
+        "guides/plans-and-limits"
+      ]
+    },
+    {
+      "group": "Agent Skill",
+      "pages": [
+        "skill/overview",
+        "skill/installation",
+        "skill/usage"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/sk-code-01"
+  },
+  "feedback": {
+    "thumbsRating": true
+  },
+  "api": {
+    "baseUrl": "https://supalink.dev"
+  }
+}

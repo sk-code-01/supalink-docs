@@ -1,0 +1,51 @@
+---
+title: Delete a Site
+description: DELETE /api/v1/publish/:slug — Permanently delete a site
+---
+
+## Delete a Site
+
+Permanently deletes a site and all its files from storage.
+
+```
+DELETE /api/v1/publish/:slug
+```
+
+### Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The site slug to delete (e.g., `bright-canvas-a7k2`).
+</ParamField>
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Authorization` | Yes | `Bearer sl_live_...` |
+
+### Example
+
+```bash
+curl -X DELETE https://supalink.dev/api/v1/publish/bright-canvas-a7k2 \
+  -H "Authorization: Bearer sl_live_your_key_here"
+```
+
+### Response (200)
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "deleted": true
+}
+```
+
+<Warning>
+This action is permanent. The site, all its versions, and all files are deleted from storage. The slug is retired and cannot be reused.
+</Warning>
+
+### Errors
+
+| Status | Code | Reason |
+|--------|------|--------|
+| 401 | `UNAUTHORIZED` | Invalid or missing API key |
+| 404 | `NOT_FOUND` | Site not found or not owned by this user |

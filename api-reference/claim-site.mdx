@@ -1,0 +1,68 @@
+---
+title: Claim a Site
+description: POST /api/v1/publish/:slug/claim — Transfer an anonymous site to your account
+---
+
+## Claim an Anonymous Site
+
+Transfer ownership of an anonymous site to your account, making it permanent.
+
+When you publish without an API key, the site is anonymous and expires in 24 hours. The response includes a `claimToken` that you can use later to claim the site.
+
+```
+POST /api/v1/publish/:slug/claim
+```
+
+### Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The slug of the anonymous site to claim.
+</ParamField>
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | `application/json` |
+| `Authorization` | Yes | `Bearer sl_live_...` — you must be authenticated to claim a site |
+
+### Request Body
+
+<ParamField body="claimToken" type="string" required>
+  The claim token from the original anonymous publish response.
+</ParamField>
+
+### Example
+
+```bash
+curl -X POST https://supalink.dev/api/v1/publish/bright-canvas-a7k2/claim \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sl_live_your_key_here" \
+  -d '{"claimToken": "550e8400-e29b-41d4-a716-446655440000"}'
+```
+
+### Response (200)
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+  "owner": "you@example.com",
+  "message": "Site claimed successfully! It is now permanent and linked to your account."
+}
+```
+
+After claiming, the site:
+- No longer expires
+- Appears in your [site list](/api-reference/list-sites)
+- Can be updated and managed like any other site
+
+### Errors
+
+| Status | Code | Reason |
+|--------|------|--------|
+| 401 | `UNAUTHORIZED` | Invalid or missing API key |
+| 404 | `NOT_FOUND` | Site not found |
+| 400 | `INVALID_REQUEST` | Invalid claim token |
+| 400 | `INVALID_REQUEST` | Site has already been claimed |
+| 400 | `INVALID_REQUEST` | Site has expired |

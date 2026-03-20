@@ -1,0 +1,87 @@
+---
+title: Quickstart
+description: Publish your first site in under a minute
+---
+
+## Prerequisites
+
+You need `curl` and `jq` installed. Both come pre-installed on macOS and most Linux distributions.
+
+## Step 1: Get the publish script
+
+```bash
+curl -fsSL https://supalink.dev/publish.sh -o publish.sh && chmod +x publish.sh
+```
+
+## Step 2: Publish a directory
+
+```bash
+./publish.sh ./my-site
+```
+
+That's it. You'll get a live URL like `https://bright-canvas-a7k2.supalink.dev/`.
+
+<Note>
+Without an API key, your site is published anonymously and expires in **24 hours**. See below to make it permanent.
+</Note>
+
+## Make it permanent
+
+### Get an API key
+
+<Steps>
+  <Step title="Request a verification code">
+    ```bash
+    curl -s -X POST https://supalink.dev/api/auth/agent/request-code \
+      -H "Content-Type: application/json" \
+      -d '{"email": "you@example.com"}'
+    ```
+  </Step>
+  <Step title="Check your email">
+    You'll receive a code in the format `XXXX-XXXX`.
+  </Step>
+  <Step title="Verify and get your API key">
+    ```bash
+    curl -s -X POST https://supalink.dev/api/auth/agent/verify-code \
+      -H "Content-Type: application/json" \
+      -d '{"email": "you@example.com", "code": "ABCD-1234"}'
+    ```
+    The response includes your API key. **Save it immediately** — it is shown only once.
+  </Step>
+</Steps>
+
+### Publish with your API key
+
+```bash
+export SUPALINK_API_KEY="sl_live_your_key_here"
+./publish.sh ./my-site
+```
+
+Authenticated publishes are **permanent** — they don't expire.
+
+## Update an existing site
+
+Pass the slug as a second argument:
+
+```bash
+./publish.sh ./my-site bright-canvas-a7k2
+```
+
+Only changed files are uploaded (hash deduplication). Unchanged files are copied server-side.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Custom Domains" icon="globe" href="/guides/custom-domains">
+    Point your own domain to your site.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    Build your own integration with the REST API.
+  </Card>
+  <Card title="Agent Skill" icon="robot" href="/skill/overview">
+    Let AI agents publish for you.
+  </Card>
+  <Card title="Plans & Limits" icon="gauge" href="/guides/plans-and-limits">
+    Compare Free and Hobby plans.
+  </Card>
+</CardGroup>

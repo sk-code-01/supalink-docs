@@ -1,0 +1,71 @@
+---
+title: Update Metadata
+description: PATCH /api/v1/publish/:slug/metadata — Update site title, description, password, and TTL
+---
+
+## Update Site Metadata
+
+Update a site's metadata without publishing a new version. Use this to change the title, description, add password protection, or set an expiry.
+
+```
+PATCH /api/v1/publish/:slug/metadata
+```
+
+### Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The site slug (e.g., `bright-canvas-a7k2`).
+</ParamField>
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | `application/json` |
+| `Authorization` | Yes | `Bearer sl_live_...` |
+
+### Request Body
+
+All fields are optional. Only include the fields you want to change. Set a field to `null` to clear it.
+
+<ParamField body="title" type="string | null">
+  Page title shown in browser tab and social previews.
+</ParamField>
+
+<ParamField body="description" type="string | null">
+  Meta description for social previews.
+</ParamField>
+
+<ParamField body="ogImagePath" type="string | null">
+  Path to an existing file in the site to use as the Open Graph image.
+</ParamField>
+
+<ParamField body="password" type="string | null">
+  Set a password to protect the site. Set to `null` to remove protection. Passwords are hashed server-side.
+</ParamField>
+
+<ParamField body="ttlSeconds" type="number | null">
+  Set an expiry in seconds from now. Set to `null` to make permanent.
+</ParamField>
+
+### Example
+
+```bash
+curl -X PATCH https://supalink.dev/api/v1/publish/bright-canvas-a7k2/metadata \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sl_live_your_key_here" \
+  -d '{
+    "title": "My Project",
+    "description": "A cool project",
+    "password": "secret123"
+  }'
+```
+
+### Response (200)
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "updated": true
+}
+```

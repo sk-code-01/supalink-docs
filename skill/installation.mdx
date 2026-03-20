@@ -1,0 +1,83 @@
+---
+title: Installation
+description: Install the Supalink skill for your AI coding agent
+---
+
+## Install via npx
+
+The recommended way to install:
+
+```bash
+npx skills add sk-code-01/supalink-skill --skill supalink -g
+```
+
+The `-g` flag installs globally (available in all projects). Omit it for a project-local install.
+
+## Manual Install
+
+If `npx skills add` doesn't work, you can install manually:
+
+### Claude Code
+
+```bash
+mkdir -p ~/.claude/skills/supalink
+curl -fsSL https://raw.githubusercontent.com/sk-code-01/supalink-skill/main/skills/supalink/SKILL.md \
+  -o ~/.claude/skills/supalink/SKILL.md
+```
+
+### Cursor
+
+```bash
+mkdir -p .cursor/skills/supalink
+curl -fsSL https://raw.githubusercontent.com/sk-code-01/supalink-skill/main/skills/supalink/SKILL.md \
+  -o .cursor/skills/supalink/SKILL.md
+```
+
+## Verify Installation
+
+Start a new Claude Code session and type:
+
+```
+/supalink
+```
+
+If the skill is installed, Claude will activate it and ask what you want to publish.
+
+## Set Your API Key
+
+For permanent publishing, set your API key as an environment variable:
+
+```bash
+export SUPALINK_API_KEY="sl_live_your_key_here"
+```
+
+Add it to your shell profile (`~/.zshrc` or `~/.bashrc`) to persist across sessions:
+
+```bash
+echo 'export SUPALINK_API_KEY="sl_live_your_key_here"' >> ~/.zshrc
+```
+
+<Tip>
+Don't have an API key? The skill will guide you through the authentication flow on first use. Just say "publish this" and follow the prompts.
+</Tip>
+
+## Requirements
+
+The skill uses `publish.sh` which requires:
+
+- `curl` — Pre-installed on macOS and most Linux
+- `jq` — Pre-installed on macOS. Install on Linux: `sudo apt install jq`
+
+## Uninstall
+
+### Global
+
+```bash
+npx skills remove supalink -g
+```
+
+### Manual
+
+```bash
+rm -rf ~/.claude/skills/supalink
+```

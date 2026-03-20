@@ -1,0 +1,70 @@
+---
+title: Get Site Details
+description: GET /api/v1/publish/:slug — Get full details about a site
+---
+
+## Get Site Details
+
+Returns full details about a specific site, including the complete file list.
+
+```
+GET /api/v1/publish/:slug
+```
+
+### Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The site slug (e.g., `bright-canvas-a7k2`).
+</ParamField>
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Authorization` | Yes | `Bearer sl_live_...` |
+
+### Example
+
+```bash
+curl -X GET https://supalink.dev/api/v1/publish/bright-canvas-a7k2 \
+  -H "Authorization: Bearer sl_live_your_key_here"
+```
+
+### Response (200)
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+  "status": "active",
+  "versionId": "01jm4abc123def456",
+  "title": "My Project",
+  "description": "A cool project",
+  "ogImagePath": "og.png",
+  "hasPassword": false,
+  "createdAt": "2026-03-19T20:37:48.537Z",
+  "updatedAt": "2026-03-19T20:50:57.655Z",
+  "expiresAt": null,
+  "files": [
+    {
+      "path": "index.html",
+      "size": 1024,
+      "contentType": "text/html",
+      "hash": "a1b2c3d4e5f6..."
+    },
+    {
+      "path": "style.css",
+      "size": 512,
+      "contentType": "text/css",
+      "hash": "f6e5d4c3b2a1..."
+    }
+  ]
+}
+```
+
+### Errors
+
+| Status | Code | Reason |
+|--------|------|--------|
+| 401 | `UNAUTHORIZED` | Invalid or missing API key |
+| 404 | `NOT_FOUND` | Site not found or not owned by this user |

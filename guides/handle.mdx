@@ -1,0 +1,44 @@
+---
+title: Handle
+description: Get a personalized subdomain for your Supalink profile
+---
+
+## What is a Handle?
+
+A handle gives you a personalized URL at `yourname.supalink.dev`. It's like a username for your Supalink profile.
+
+<Note>
+Handles are available on the **Hobby plan** ($4/mo) only.
+</Note>
+
+## Setting Your Handle
+
+1. Go to [supalink.dev/dashboard](https://supalink.dev/dashboard)
+2. Click the **Handle** tab
+3. Enter your desired handle
+4. Click **Save Changes**
+
+### Handle Rules
+
+- Lowercase letters, numbers, and hyphens only
+- Cannot start or end with a hyphen
+- Must be unique across all users
+- Can be changed at any time (your old handle is released)
+
+## Using Your Handle
+
+Once set, your handle URL (`yourname.supalink.dev`) is active. You can configure what it points to in the dashboard.
+
+## Managing via API
+
+```bash
+# Get your current handle
+curl -X GET https://supalink.dev/api/v1/handle \
+  -H "Authorization: Bearer sl_live_your_key_here"
+
+# Set or update your handle
+curl -X PUT https://supalink.dev/api/v1/handle \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sl_live_your_key_here" \
+  -d '{"handle": "yourname"}'
+```

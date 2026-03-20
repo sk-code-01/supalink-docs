@@ -1,0 +1,52 @@
+---
+title: Duplicate a Site
+description: POST /api/v1/publish/:slug/duplicate — Create a copy of a site
+---
+
+## Duplicate a Site
+
+Creates a copy of an existing site under a new slug. All files are copied server-side in storage — no client upload needed.
+
+```
+POST /api/v1/publish/:slug/duplicate
+```
+
+### Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The slug of the site to duplicate (e.g., `bright-canvas-a7k2`).
+</ParamField>
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Authorization` | Yes | `Bearer sl_live_...` |
+
+### Example
+
+```bash
+curl -X POST https://supalink.dev/api/v1/publish/bright-canvas-a7k2/duplicate \
+  -H "Authorization: Bearer sl_live_your_key_here"
+```
+
+### Response (201)
+
+```json
+{
+  "slug": "cool-river-x9f3",
+  "siteUrl": "https://cool-river-x9f3.supalink.dev/",
+  "versionId": "01jm4xyz789ghi012",
+  "copiedFrom": "bright-canvas-a7k2",
+  "status": "active"
+}
+```
+
+The new site is immediately live — no finalize step needed since files are copied server-side.
+
+### Errors
+
+| Status | Code | Reason |
+|--------|------|--------|
+| 401 | `UNAUTHORIZED` | Invalid or missing API key |
+| 404 | `NOT_FOUND` | Source site not found or not owned by this user |

@@ -1,0 +1,87 @@
+---
+title: API Overview
+description: REST API for publishing and managing static sites
+---
+
+## Base URL
+
+```
+https://supalink.dev
+```
+
+All API endpoints are prefixed with `/api/v1/` or `/api/auth/`.
+
+## Authentication
+
+Authenticated endpoints require a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer sl_live_your_api_key_here
+```
+
+API keys have the format `sl_live_` followed by 32 hex characters. See [Authentication](/api-reference/authentication) for how to get one.
+
+Some endpoints work without authentication (anonymous publishing), but with limitations.
+
+## Content Type
+
+All request bodies must be JSON:
+
+```
+Content-Type: application/json
+```
+
+## Response Format
+
+All responses return JSON. Successful responses include the relevant data. Error responses follow a consistent format:
+
+```json
+{
+  "error": "Description of what went wrong",
+  "code": "ERROR_CODE",
+  "status": 400
+}
+```
+
+See [Errors](/api-reference/errors) for all error codes.
+
+## Rate Limiting
+
+Every API response includes rate limit headers:
+
+```
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 45
+X-RateLimit-Reset: 1711050000
+```
+
+See [Rate Limits](/api-reference/rate-limits) for limits per plan.
+
+## Endpoints
+
+### Publishing
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/publish` | [Create a new site](/api-reference/publish) |
+| `PUT` | `/api/v1/_upload/:key` | [Upload a file](/api-reference/upload) |
+| `POST` | `/api/v1/publish/:slug/finalize` | [Finalize and go live](/api-reference/finalize) |
+| `PUT` | `/api/v1/publish/:slug` | [Update an existing site](/api-reference/update) |
+
+### Management
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/publishes` | [List all sites](/api-reference/list-sites) |
+| `GET` | `/api/v1/publish/:slug` | [Get site details](/api-reference/get-site) |
+| `DELETE` | `/api/v1/publish/:slug` | [Delete a site](/api-reference/delete-site) |
+| `POST` | `/api/v1/publish/:slug/duplicate` | [Duplicate a site](/api-reference/duplicate-site) |
+| `PATCH` | `/api/v1/publish/:slug/metadata` | [Update metadata](/api-reference/update-metadata) |
+| `POST` | `/api/v1/publish/:slug/claim` | [Claim anonymous site](/api-reference/claim-site) |
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/auth/agent/request-code` | [Request verification code](/api-reference/authentication#request-a-verification-code) |
+| `POST` | `/api/auth/agent/verify-code` | [Verify code and get API key](/api-reference/authentication#verify-code-and-get-api-key) |

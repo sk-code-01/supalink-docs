@@ -1,0 +1,87 @@
+---
+title: How It Works
+description: The architecture behind Supalink's instant publishing
+---
+
+## Architecture
+
+Supalink runs entirely on Cloudflare's edge infrastructure:
+
+- **Cloudflare Workers** — Handles all API requests and site serving
+- **Cloudflare R2** — Object storage for published files (S3-compatible, zero egress fees)
+- **Cloudflare D1** — SQLite database for site metadata, users, and versions
+- **Cloudflare KV** — Session storage and rate limiting
+
+Every request is handled at the edge, close to the user. There are no origin servers.
+
+## The Publish Flow
+
+When you publish a directory, three things happen:
+
+### 1. Create (file manifest)
+
+Your client sends a JSON manifest listing every file: path, size, content type, and SHA-256 hash.
+
+```json
+{
+  "files": [
+    { "path": "index.html", "size": 1024, "contentType": "text/html", "hash": "a1b2c3..." },
+    { "path": "style.css", "size": 512, "contentType": "text/css", "hash": "d4e5f6..." }
+  ]
+}
+```
+
+The API creates a new **version** for the site and returns presigned upload URLs for each file.
+
+### 2. Upload (direct to R2)
+
+Each file is uploaded directly to R2 using the presigned URL. The upload goes straight to storage — no proxying through the Worker for large files.
+
+Upload URLs expire after **1 hour**.
+
+### 3. Finalize
+
+After all files are uploaded, a finalize call tells the API to make the new version live. The API verifies every file exists in R2 before activating.
+
+The old version (if updating) is marked as `superseded`. The new version becomes `active`.
+
+## Site Serving
+
+When someone visits `slug.supalink.dev`:
+
+1. The Worker extracts the subdomain (`slug`)
+2. Looks up the site in D1 to find the active version
+3. Fetches the requested file from R2 at `sites/{slug}/{versionId}/{path}`
+4. Returns it with appropriate caching headers
+
+If the requested path doesn't have an extension, the Worker tries `path/index.html` as a fallback (SPA-friendly serving).
+
+## Hash Deduplication
+
+When you update a site, files that haven't changed don't need to be re-uploaded:
+
+1. You send file hashes in the manifest
+2. The API compares them against the previous version's file hashes
+3. Matching files are copied server-side in R2 (zero-cost copy)
+4. Only new or changed files need to be uploaded
+
+This makes updates fast — even for large sites, you typically only upload the files you changed.
+
+## Slugs
+
+Every site gets a random slug like `bright-canvas-a7k2`. Slugs are:
+
+- Generated using a `adjective-noun-xxxx` pattern
+- Globally unique
+- Permanent (even if the site is deleted, the slug is never reused)
+
+## Anonymous vs Authenticated
+
+| | Anonymous | Authenticated |
+|---|---|---|
+| API key required | No | Yes |
+| Site expiry | 24 hours | Permanent |
+| Claimable | Yes (with claim token) | N/A |
+| Rate limit | 5 req/hour | 60+ req/hour |
+
+Anonymous sites receive a `claimToken` in the response. You can claim the site later by providing this token along with an API key, making it permanent.

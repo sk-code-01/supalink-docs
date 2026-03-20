@@ -1,0 +1,144 @@
+---
+title: Create a Site
+description: POST /api/v1/publish — Create a new site and get upload URLs
+---
+
+## Create a New Site
+
+Creates a new site with a randomly generated slug and returns presigned upload URLs for each file.
+
+```
+POST /api/v1/publish
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | `application/json` |
+| `Authorization` | No | `Bearer sl_live_...` — omit for anonymous publishing |
+
+### Request Body
+
+<ParamField body="files" type="array" required>
+  Array of file objects to publish. Must contain at least one file. Maximum 1,000 files.
+
+  <Expandable title="File object properties">
+    <ParamField body="path" type="string" required>
+      Relative file path. No leading `/`, no `..` traversal. Max 500 characters.
+    </ParamField>
+    <ParamField body="size" type="number" required>
+      File size in bytes. Must be positive.
+    </ParamField>
+    <ParamField body="contentType" type="string" required>
+      MIME type (e.g., `text/html`, `image/png`, `application/javascript`).
+    </ParamField>
+    <ParamField body="hash" type="string">
+      SHA-256 hex hash (64 lowercase hex characters). Enables deduplication on updates.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="viewer" type="object">
+  Optional metadata for the site viewer page.
+
+  <Expandable title="Viewer properties">
+    <ParamField body="title" type="string">
+      Page title shown in browser tab and social previews.
+    </ParamField>
+    <ParamField body="description" type="string">
+      Meta description for social previews.
+    </ParamField>
+    <ParamField body="ogImagePath" type="string">
+      Path to an image in the file manifest to use as the Open Graph image.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+### Example Request
+
+```bash
+curl -X POST https://supalink.dev/api/v1/publish \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer sl_live_your_key_here" \
+  -d '{
+    "files": [
+      {
+        "path": "index.html",
+        "size": 1024,
+        "contentType": "text/html",
+        "hash": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+      },
+      {
+        "path": "style.css",
+        "size": 512,
+        "contentType": "text/css",
+        "hash": "f6e5d4c3b2a1f6e5d4c3b2a1f6e5d4c3b2a1f6e5d4c3b2a1f6e5d4c3b2a1f6e5"
+      }
+    ]
+  }'
+```
+
+### Response (201)
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+  "upload": {
+    "versionId": "01jm4abc123def456",
+    "uploads": [
+      {
+        "path": "index.html",
+        "method": "PUT",
+        "url": "https://supalink.dev/api/v1/_upload/sites%2Fbright-canvas-a7k2%2F01jm4abc123%2Findex.html?token=...&ct=text%2Fhtml&exp=...",
+        "headers": {
+          "Content-Type": "text/html"
+        }
+      },
+      {
+        "path": "style.css",
+        "method": "PUT",
+        "url": "https://supalink.dev/api/v1/_upload/sites%2Fbright-canvas-a7k2%2F01jm4abc123%2Fstyle.css?token=...&ct=text%2Fcss&exp=...",
+        "headers": {
+          "Content-Type": "text/css"
+        }
+      }
+    ],
+    "skipped": [],
+    "finalizeUrl": "https://supalink.dev/api/v1/publish/bright-canvas-a7k2/finalize",
+    "expiresInSeconds": 3600
+  }
+}
+```
+
+### Anonymous Publish Response
+
+When no `Authorization` header is provided, the response includes additional fields:
+
+```json
+{
+  "slug": "bright-canvas-a7k2",
+  "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+  "claimToken": "550e8400-e29b-41d4-a716-446655440000",
+  "claimUrl": "https://supalink.dev/claim?slug=bright-canvas-a7k2&token=550e8400...",
+  "expiresAt": "2026-03-21T20:00:00.000Z",
+  "anonymous": true,
+  "warning": "IMPORTANT: Save the claimToken and claimUrl. Returned only once.",
+  "upload": { ... }
+}
+```
+
+<Warning>
+Save the `claimToken` immediately. It is returned **only once** and is needed to claim the site later. Anonymous sites expire in 24 hours.
+</Warning>
+
+### Validation Rules
+
+- `files` array must not be empty
+- Maximum 1,000 files per site
+- No duplicate file paths
+- Paths cannot contain `..` or start with `/`
+- Paths cannot contain null bytes
+- Path max length: 500 characters
+- `hash` must be exactly 64 lowercase hex characters if provided

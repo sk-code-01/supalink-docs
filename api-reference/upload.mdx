@@ -1,0 +1,54 @@
+---
+title: Upload Files
+description: PUT /api/v1/_upload/:key — Upload a file to its presigned URL
+---
+
+## Upload a File
+
+Upload a file's raw bytes to the presigned URL returned by the [Create](/api-reference/publish) or [Update](/api-reference/update) endpoints.
+
+```
+PUT <upload.url from create/update response>
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Content-Type` | Yes | Must match the content type from the upload object's `headers` |
+
+### Request Body
+
+The raw file bytes. Do **not** wrap in JSON — send the file content directly.
+
+### Example
+
+```bash
+# Using the URL from the create response
+curl -X PUT "https://supalink.dev/api/v1/_upload/sites%2Fbright-canvas-a7k2%2F01jm4abc123%2Findex.html?token=abc123&ct=text%2Fhtml&exp=1711050000000" \
+  -H "Content-Type: text/html" \
+  --data-binary "@./dist/index.html"
+```
+
+### Response (200)
+
+Empty body on success.
+
+### Errors
+
+| Status | Reason |
+|--------|--------|
+| 400 | Upload URL has expired (1 hour TTL) |
+| 400 | No request body provided |
+| 500 | Upload to storage failed |
+
+### Important Notes
+
+<Note>
+Upload URLs expire after **1 hour**. If they expire, you'll need to create a new version by calling the publish endpoint again.
+</Note>
+
+- Upload all files listed in the `uploads` array before calling [Finalize](/api-reference/finalize)
+- Files in the `skipped` array (hash matches) do not need to be uploaded
+- Upload order doesn't matter — you can upload files in parallel
+- The `--data-binary` flag is important when using curl — it preserves the raw bytes without any processing

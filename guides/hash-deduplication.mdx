@@ -1,0 +1,100 @@
+---
+title: Hash Deduplication
+description: Only upload changed files when updating a site
+---
+
+## How It Works
+
+When you update an existing site, Supalink compares SHA-256 hashes of each file against the previous version. Files that haven't changed are copied server-side — no re-upload needed.
+
+This makes updates fast, even for large sites with hundreds of files.
+
+## The Flow
+
+<Steps>
+  <Step title="Send manifest with hashes">
+    Include the `hash` field for each file in your update request:
+    ```json
+    {
+      "files": [
+        {"path": "index.html", "size": 2048, "contentType": "text/html", "hash": "abc123..."},
+        {"path": "style.css", "size": 512, "contentType": "text/css", "hash": "def456..."}
+      ]
+    }
+    ```
+  </Step>
+  <Step title="API compares hashes">
+    The API checks each file's hash against the same file path in the previous version.
+  </Step>
+  <Step title="Matching files are skipped">
+    Files with identical hashes appear in the `skipped` array — they're copied internally, no upload needed.
+  </Step>
+  <Step title="Upload only changed files">
+    Only files in the `uploads` array need to be uploaded.
+  </Step>
+</Steps>
+
+## Example Response
+
+If you update a site where only `index.html` changed:
+
+```json
+{
+  "upload": {
+    "uploads": [
+      {"path": "index.html", "url": "...", "headers": {"Content-Type": "text/html"}}
+    ],
+    "skipped": [
+      {"path": "style.css", "reason": "hash_match"},
+      {"path": "logo.png", "reason": "hash_match"},
+      {"path": "app.js", "reason": "hash_match"}
+    ]
+  }
+}
+```
+
+Only 1 file needs uploading. The other 3 are copied server-side instantly.
+
+## Computing Hashes
+
+The hash must be a **SHA-256 hex digest** (64 lowercase hex characters).
+
+### macOS
+
+```bash
+shasum -a 256 index.html | cut -d' ' -f1
+```
+
+### Linux
+
+```bash
+sha256sum index.html | cut -d' ' -f1
+```
+
+### Node.js
+
+```javascript
+const crypto = require('crypto');
+const fs = require('fs');
+
+const hash = crypto.createHash('sha256')
+  .update(fs.readFileSync('index.html'))
+  .digest('hex');
+```
+
+### Python
+
+```python
+import hashlib
+
+with open('index.html', 'rb') as f:
+    hash = hashlib.sha256(f.read()).hexdigest()
+```
+
+<Tip>
+The `publish.sh` script handles hashing automatically. You only need to compute hashes manually if you're building a custom integration with the API.
+</Tip>
+
+## Without Hashes
+
+If you omit the `hash` field, every file is treated as new and must be uploaded. Always include hashes when updating to get the performance benefit.

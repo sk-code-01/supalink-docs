@@ -1,0 +1,71 @@
+---
+title: List Sites
+description: GET /api/v1/publishes — List all your sites
+---
+
+## List All Sites
+
+Returns all sites owned by the authenticated user.
+
+```
+GET /api/v1/publishes
+```
+
+### Headers
+
+| Header | Required | Description |
+|--------|----------|-------------|
+| `Authorization` | Yes | `Bearer sl_live_...` |
+
+### Example
+
+```bash
+curl -X GET https://supalink.dev/api/v1/publishes \
+  -H "Authorization: Bearer sl_live_your_key_here"
+```
+
+### Response (200)
+
+```json
+{
+  "sites": [
+    {
+      "slug": "bright-canvas-a7k2",
+      "siteUrl": "https://bright-canvas-a7k2.supalink.dev/",
+      "status": "active",
+      "title": "My Project",
+      "fileCount": 5,
+      "totalSize": 102400,
+      "createdAt": "2026-03-19T20:37:48.537Z",
+      "updatedAt": "2026-03-19T20:50:57.655Z",
+      "expiresAt": null
+    },
+    {
+      "slug": "deep-dock-h336",
+      "siteUrl": "https://deep-dock-h336.supalink.dev/",
+      "status": "pending",
+      "title": null,
+      "fileCount": 0,
+      "totalSize": 0,
+      "createdAt": "2026-03-20T10:15:00.000Z",
+      "updatedAt": "2026-03-20T10:15:00.000Z",
+      "expiresAt": null
+    }
+  ],
+  "total": 2
+}
+```
+
+### Response Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `slug` | string | The site's unique identifier |
+| `siteUrl` | string | The live URL |
+| `status` | string | `active`, `pending`, or `expired` |
+| `title` | string \| null | The site title (from metadata) |
+| `fileCount` | number | Number of files in the current version |
+| `totalSize` | number | Total size in bytes of all files |
+| `createdAt` | string | ISO 8601 timestamp |
+| `updatedAt` | string | ISO 8601 timestamp |
+| `expiresAt` | string \| null | Expiry timestamp (null = permanent) |
