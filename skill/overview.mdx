@@ -1,49 +1,62 @@
 ---
 title: Agent Skill
-description: Let AI agents publish to Supalink automatically
+description: One command to give your agent the power to publish
 ---
 
-## What is the Supalink Skill?
-
-The Supalink skill lets AI coding agents (like Claude Code) publish files and folders to live URLs automatically. Once installed, just say "publish this" and the agent handles everything.
-
-## How It Works
-
-1. **Agent detects intent** — You say "publish this", "deploy my site", "give me a URL", or similar
-2. **Skill activates** — The agent loads the Supalink skill instructions
-3. **Files are published** — The agent runs `publish.sh` to scan, upload, and finalize
-4. **URL returned** — You get a live URL at `slug.supalink.dev`
-
-## Supported Agents
-
-The skill follows the open [Agent Skills](https://agentskills.io) standard and works with:
-
-- **Claude Code** — Full support via `npx skills add`
-- **Cursor** — Via the skills system
-- **Windsurf** — Via the skills system
-- **Other agents** — Any agent supporting the Agent Skills standard
-
-## Features
-
-<CardGroup cols={2}>
-  <Card title="Auto-Publish" icon="rocket">
-    Say "publish this" and the agent handles the entire flow.
-  </Card>
-  <Card title="Smart Detection" icon="magnifying-glass">
-    Automatically finds build output directories (dist/, build/, out/).
-  </Card>
-  <Card title="Auth Flow" icon="key">
-    Guides you through email verification to get an API key on first use.
-  </Card>
-  <Card title="Updates" icon="arrows-rotate">
-    Say "update my site" and only changed files are re-uploaded.
-  </Card>
-</CardGroup>
-
-## Quick Install
+## Install in 5 seconds
 
 ```bash
-npx skills add sk-code-01/supalink-skill --skill supalink -g
+npx skills add sk-code-01/supalink-skill -g
 ```
 
-See [Installation](/skill/installation) for detailed setup instructions.
+That's it. Your agent can now publish to the web.
+
+## What happens after install
+
+Your AI agent gains a new ability: turning any files into a live website. Just tell it what you want:
+
+| You say | Agent does |
+|---------|-----------|
+| "Publish this project" | Scans files, uploads to Supalink, returns a live URL |
+| "Deploy my dist folder" | Same — finds dist/, publishes it |
+| "Give me a URL for this" | Same — detects the right directory, publishes |
+| "Update my site" | Compares hashes, uploads only changed files |
+| "Make this live" | Same — publishes whatever you're working on |
+
+The agent handles **everything**: file scanning, hashing, uploading, authentication, error handling, and retries.
+
+## One install, every project
+
+The skill installs globally. Every project, every conversation, every agent session — it just works. Your agent always has the ability to publish.
+
+```
+Session 1: "Build a landing page" → agent builds + publishes
+Session 2: "Create a dashboard" → agent builds + publishes
+Session 3: "Update the landing page" → agent updates only changed files
+```
+
+## Supported agents
+
+| Agent | Install method |
+|-------|---------------|
+| **Claude Code** | `npx skills add sk-code-01/supalink-skill -g` |
+| **Cursor** | `npx skills add sk-code-01/supalink-skill -g -a cursor` |
+| **Windsurf** | `npx skills add sk-code-01/supalink-skill -g -a windsurf` |
+| **All agents** | `npx skills add sk-code-01/supalink-skill -g --all` |
+
+Follows the open [Agent Skills](https://agentskills.io) standard.
+
+## No API key? No problem
+
+Without an API key, the agent publishes anonymously — the site is live instantly but expires in 24 hours. The agent will offer to set up authentication on the first publish if you want permanent URLs.
+
+## What's next
+
+<CardGroup cols={2}>
+  <Card title="Installation details" icon="download" href="/skill/installation">
+    Manual install, environment setup, and troubleshooting.
+  </Card>
+  <Card title="Usage examples" icon="message-bot" href="/skill/usage">
+    Real examples of what agents can publish.
+  </Card>
+</CardGroup>

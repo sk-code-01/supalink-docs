@@ -1,0 +1,101 @@
+---
+title: Why Agents?
+description: Why Supalink is built for AI agents, not humans
+---
+
+## The problem
+
+AI agents are getting better at building things. Claude writes a full React app. Cursor generates a landing page. Copilot scaffolds a dashboard. But then what?
+
+The agent builds it. You review it. And then you spend 20 minutes setting up hosting, configuring deploys, pushing to a repo, waiting for CI.
+
+**The agent did the hard part. Hosting shouldn't be harder.**
+
+## The solution
+
+Supalink gives agents a single capability: publish anything to the web instantly.
+
+```
+You: "Build me a landing page for my product"
+
+Agent: [builds the page]
+       "Done! Here's the live URL: https://cool-page-x9f3.supalink.dev/"
+```
+
+No deploy scripts. No CI pipeline. No hosting config. The agent handles everything end-to-end.
+
+## How agents use Supalink
+
+### Discovery
+
+Agents find Supalink automatically through standard protocols:
+
+| Protocol | URL | Purpose |
+|----------|-----|---------|
+| **llms.txt** | [supalink.dev/llms.txt](https://supalink.dev/llms.txt) | AI-readable docs index |
+| **OpenAPI** | [supalink.dev/openapi.json](https://supalink.dev/openapi.json) | Machine-readable API spec |
+| **Agent Skill** | `npx skills add sk-code-01/supalink-skill -g` | One-command install |
+
+### Publishing
+
+The agent uses a simple 3-call flow:
+
+```
+POST /api/v1/publish     → Create site, get upload URLs
+PUT  <presigned-url>      → Upload each file (parallel)
+POST /finalize            → Make it live
+```
+
+Or even simpler — the agent downloads `publish.sh` and runs it:
+
+```bash
+curl -fsSL https://supalink.dev/publish.sh | bash -s ./dist
+```
+
+### Updating
+
+When the agent updates a site, Supalink compares file hashes and only uploads what changed. A 500-file site where 3 files changed? Only 3 uploads. The agent handles this automatically.
+
+## What makes Supalink agent-native
+
+| Feature | Why it matters for agents |
+|---------|--------------------------|
+| **No config files** | Agents don't need to generate netlify.toml, vercel.json, or any config |
+| **No git required** | Agents can publish directly from any directory — no repo needed |
+| **No accounts required** | Anonymous publishing works instantly (24-hour expiry) |
+| **Presigned uploads** | Files go directly to storage — no streaming through a server |
+| **Hash dedup** | Agents skip unchanged files automatically |
+| **JSON errors with fix hints** | When something fails, the API tells the agent exactly how to fix it |
+| **Rate limit headers** | Agents know exactly when to retry |
+| **Deterministic slugs** | Same API shape every time — agents can rely on consistent responses |
+
+## The agent workflow
+
+This is the typical flow when a developer uses an AI agent with Supalink:
+
+<Steps>
+  <Step title="Developer gives a prompt">
+    "Build me a dashboard for my sales data" or "Create a portfolio site" or "Make a documentation page for this API"
+  </Step>
+  <Step title="Agent builds it">
+    The agent writes HTML, CSS, JS — whatever is needed. This is what agents are already great at.
+  </Step>
+  <Step title="Agent publishes it">
+    The agent calls Supalink's API (via the installed skill or directly). Files are uploaded, site goes live.
+  </Step>
+  <Step title="Developer gets a URL">
+    `https://sales-dash-k8m2.supalink.dev/` — live, shareable, ready to use. The whole thing took 2 minutes.
+  </Step>
+</Steps>
+
+## Supported agents
+
+The Supalink skill follows the open [Agent Skills](https://agentskills.io) standard:
+
+- **Claude Code** — Full support
+- **Cursor** — Full support
+- **Windsurf** — Full support
+- **GitHub Copilot** — Via OpenAPI spec
+- **Custom agents** — Via REST API or OpenAPI spec
+
+Any agent that can make HTTP requests can use Supalink.

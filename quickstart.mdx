@@ -1,87 +1,133 @@
 ---
 title: Quickstart
-description: Publish your first site in under a minute
+description: Give your agent the ability to publish in under 30 seconds
 ---
 
-## Prerequisites
+## For agents (recommended)
 
-You need `curl` and `jq` installed. Both come pre-installed on macOS and most Linux distributions.
+Install the Supalink skill and your agent can publish anything to the web.
 
-## Step 1: Get the publish script
+### Step 1: Install
+
+```bash
+npx skills add sk-code-01/supalink-skill -g
+```
+
+Works with **Claude Code**, **Cursor**, **Windsurf**, and any agent supporting the [Agent Skills](https://agentskills.io) standard.
+
+### Step 2: Publish
+
+Open a new agent session and say:
+
+```
+Publish this project
+```
+
+or
+
+```
+Deploy my dist folder to the web
+```
+
+or
+
+```
+Give me a live URL for this site
+```
+
+The agent handles everything — scanning files, uploading, and returning a live URL.
+
+### Step 3: Authenticate (optional)
+
+On first publish, the agent will ask for your email to get an API key. This makes your sites **permanent**. Without it, sites expire in 24 hours.
+
+```
+Agent: "You need a Supalink API key for permanent publishing.
+        What's your email?"
+
+You:   "me@example.com"
+
+Agent: "Check your email for a verification code (XXXX-XXXX)."
+
+You:   "ABCD-1234"
+
+Agent: "Authenticated! Now publishing...
+        https://bright-canvas-a7k2.supalink.dev/"
+```
+
+Set the key in your shell profile so your agent never asks again:
+
+```bash
+echo 'export SUPALINK_API_KEY="sl_live_your_key_here"' >> ~/.zshrc
+```
+
+<Tip>
+That's the entire setup. Your agent can now publish any project, any time, with just a sentence.
+</Tip>
+
+---
+
+## For humans (manual)
+
+If you prefer to publish directly from the command line without an agent:
+
+### Get the publish script
 
 ```bash
 curl -fsSL https://supalink.dev/publish.sh -o publish.sh && chmod +x publish.sh
 ```
 
-## Step 2: Publish a directory
-
-```bash
-./publish.sh ./my-site
-```
-
-That's it. You'll get a live URL like `https://bright-canvas-a7k2.supalink.dev/`.
-
-<Note>
-Without an API key, your site is published anonymously and expires in **24 hours**. See below to make it permanent.
-</Note>
-
-## Make it permanent
-
-### Get an API key
-
-<Steps>
-  <Step title="Request a verification code">
-    ```bash
-    curl -s -X POST https://supalink.dev/api/auth/agent/request-code \
-      -H "Content-Type: application/json" \
-      -d '{"email": "you@example.com"}'
-    ```
-  </Step>
-  <Step title="Check your email">
-    You'll receive a code in the format `XXXX-XXXX`.
-  </Step>
-  <Step title="Verify and get your API key">
-    ```bash
-    curl -s -X POST https://supalink.dev/api/auth/agent/verify-code \
-      -H "Content-Type: application/json" \
-      -d '{"email": "you@example.com", "code": "ABCD-1234"}'
-    ```
-    The response includes your API key. **Save it immediately** — it is shown only once.
-  </Step>
-</Steps>
-
-### Publish with your API key
+### Publish a directory
 
 ```bash
 export SUPALINK_API_KEY="sl_live_your_key_here"
-./publish.sh ./my-site
+./publish.sh ./dist
 ```
 
-Authenticated publishes are **permanent** — they don't expire.
-
-## Update an existing site
-
-Pass the slug as a second argument:
+### Update an existing site
 
 ```bash
-./publish.sh ./my-site bright-canvas-a7k2
+./publish.sh ./dist bright-canvas-a7k2
 ```
 
-Only changed files are uploaded (hash deduplication). Unchanged files are copied server-side.
+Only changed files are uploaded. Unchanged files are copied server-side.
+
+---
+
+## For developers (API)
+
+Build your own integration with the REST API. See the [API Reference](/api-reference/overview) for full details.
+
+```bash
+# Create a site
+curl -X POST https://supalink.dev/api/v1/publish \
+  -H "Authorization: Bearer sl_live_your_key" \
+  -H "Content-Type: application/json" \
+  -d '{"files": [{"path": "index.html", "size": 1024, "contentType": "text/html"}]}'
+
+# Upload files to the returned presigned URLs
+# Then finalize to go live
+```
+
+Your agent can also discover the API automatically via:
+- [`/llms.txt`](https://supalink.dev/llms.txt) — AI-readable docs index
+- [`/openapi.json`](https://supalink.dev/openapi.json) — Full OpenAPI 3.1.0 spec
+
+---
 
 ## Next steps
 
 <CardGroup cols={2}>
+  <Card title="Skill usage examples" icon="robot" href="/skill/usage">
+    See what agents can do with Supalink.
+  </Card>
   <Card title="Custom Domains" icon="globe" href="/guides/custom-domains">
-    Point your own domain to your site.
-  </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/overview">
-    Build your own integration with the REST API.
-  </Card>
-  <Card title="Agent Skill" icon="robot" href="/skill/overview">
-    Let AI agents publish for you.
+    Point your own domain to any site.
   </Card>
   <Card title="Plans & Limits" icon="gauge" href="/guides/plans-and-limits">
-    Compare Free and Hobby plans.
+    Free tier gets you 500 sites and 10 GB.
+  </Card>
+  <Card title="How it works" icon="gears" href="/how-it-works">
+    Architecture and publish flow details.
   </Card>
 </CardGroup>

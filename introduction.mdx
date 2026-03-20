@@ -1,70 +1,82 @@
 ---
 title: Introduction
-description: Instant web hosting for developers and AI agents
+description: Instant web hosting built for AI agents
 ---
 
-# What is Supalink?
+# Supalink is web hosting for agents.
 
-Supalink is instant static web hosting. Publish any file or folder and get a live URL in seconds.
+Your AI agent just built something — an app, a landing page, a dashboard, a report. Now it needs a URL.
 
 ```bash
-./publish.sh ./dist
-# => https://bright-canvas-a7k2.supalink.dev/
+npx skills add sk-code-01/supalink-skill -g
 ```
 
-Every site gets a unique slug and is served from a global CDN via Cloudflare.
+That's it. Now your agent can publish anything to the web:
 
-## Key Features
+```
+You: "Publish this project"
+
+Agent: Published!
+       https://bright-canvas-a7k2.supalink.dev/
+```
+
+One command to install. One sentence to publish. Every agent, every project, every time.
+
+## Why Supalink?
+
+AI agents generate code constantly — HTML pages, React apps, data visualizations, PDF reports, project demos. But getting that output to a live URL has always been the hard part. Deploy scripts, CI pipelines, hosting configs.
+
+Supalink removes all of that. Your agent says "publish this" and gets a URL back. Done.
 
 <CardGroup cols={2}>
-  <Card title="Instant Publishing" icon="rocket">
-    Publish any directory to a live URL. HTML, CSS, JS, images, PDFs, videos — any static file.
+  <Card title="One command install" icon="terminal">
+    `npx skills add sk-code-01/supalink-skill -g` — works with Claude Code, Cursor, Windsurf, and any agent supporting the Agent Skills standard.
   </Card>
-  <Card title="Zero Config" icon="wand-magic-sparkles">
-    No build pipeline, no CI/CD setup, no server config. Just publish and go.
+  <Card title="Zero config" icon="wand-magic-sparkles">
+    No build pipeline, no CI/CD, no server setup. The agent handles everything: scan files, upload, get URL.
   </Card>
-  <Card title="Agent-Native" icon="robot">
-    Built for AI agents. Install the Claude Code skill and publish from any conversation.
+  <Card title="Instant URLs" icon="bolt">
+    Every publish takes seconds. Sites are served from Cloudflare's global edge network across 300+ cities.
   </Card>
-  <Card title="Hash Deduplication" icon="bolt">
-    On updates, only changed files are uploaded. Unchanged files are copied server-side.
-  </Card>
-  <Card title="Custom Domains" icon="globe">
-    Point your own domain to any Supalink site with automatic SSL.
-  </Card>
-  <Card title="Anonymous Publishing" icon="ghost">
-    No account needed. Publish anonymously with a 24-hour expiry. Claim later to keep it.
+  <Card title="Smart updates" icon="arrows-rotate">
+    When you update a site, only changed files are uploaded. The agent handles hash comparison automatically.
   </Card>
 </CardGroup>
 
-## How It Works
+## What can agents publish?
 
-Publishing is a 3-step process:
+Anything static. HTML, CSS, JavaScript, images, PDFs, videos, fonts, data files — any file type. Some things agents build and publish to Supalink:
+
+- **Web apps** — React, Vue, Svelte, or plain HTML
+- **Landing pages** — generated from a prompt
+- **Dashboards** — data visualizations and reports
+- **Documentation** — project docs and API references
+- **Demos** — quick prototypes and proof-of-concepts
+- **Portfolios** — design work and project showcases
+
+## How it works
 
 <Steps>
-  <Step title="Create">
-    Send your file manifest to the API. You get back upload URLs for each file.
+  <Step title="Agent scans your files">
+    Finds your build output (dist/, build/, out/) or whatever directory you point it to. Computes SHA-256 hashes for each file.
   </Step>
-  <Step title="Upload">
-    Upload each file to its presigned URL. Files go directly to Cloudflare R2 storage.
+  <Step title="Agent uploads to Supalink">
+    Sends the file manifest to the API, uploads each file to Cloudflare R2 storage, and finalizes the site.
   </Step>
-  <Step title="Finalize">
-    Tell the API you're done. Your site goes live instantly at `slug.supalink.dev`.
+  <Step title="You get a URL">
+    Your site is live at `slug.supalink.dev` in seconds. Share it, embed it, point a custom domain to it.
   </Step>
 </Steps>
 
-The `publish.sh` script handles all three steps automatically.
+You don't touch any of this. The agent does it all.
 
-## Quick Links
+## Get started
 
-<CardGroup cols={3}>
-  <Card title="Quickstart" icon="play" href="/quickstart">
-    Publish your first site in under a minute.
+<CardGroup cols={2}>
+  <Card title="Install the skill" icon="download" href="/quickstart">
+    One command. Works in under 30 seconds.
   </Card>
   <Card title="API Reference" icon="code" href="/api-reference/overview">
-    Full REST API documentation.
-  </Card>
-  <Card title="Agent Skill" icon="robot" href="/skill/overview">
-    Install the Claude Code skill.
+    Build your own agent integration with the REST API.
   </Card>
 </CardGroup>

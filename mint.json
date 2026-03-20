@@ -22,10 +22,14 @@
     }
   ],
   "topbarCtaButton": {
-    "name": "Get Started",
-    "url": "https://supalink.dev"
+    "name": "Install Skill",
+    "url": "https://docs.supalink.dev/quickstart"
   },
   "tabs": [
+    {
+      "name": "Agent Skill",
+      "url": "skill"
+    },
     {
       "name": "API Reference",
       "url": "api-reference"
@@ -33,10 +37,6 @@
     {
       "name": "Guides",
       "url": "guides"
-    },
-    {
-      "name": "Agent Skill",
-      "url": "skill"
     }
   ],
   "navigation": [
@@ -45,7 +45,16 @@
       "pages": [
         "introduction",
         "quickstart",
+        "why-agents",
         "how-it-works"
+      ]
+    },
+    {
+      "group": "Agent Skill",
+      "pages": [
+        "skill/overview",
+        "skill/installation",
+        "skill/usage"
       ]
     },
     {
@@ -76,14 +85,6 @@
         "guides/anonymous-publishing",
         "guides/hash-deduplication",
         "guides/plans-and-limits"
-      ]
-    },
-    {
-      "group": "Agent Skill",
-      "pages": [
-        "skill/overview",
-        "skill/installation",
-        "skill/usage"
       ]
     }
   ],
