@@ -18,7 +18,7 @@ SimpleHost offers two plans:
     - 60 API requests/hour
   </Card>
   <Card title="Hobby" icon="rocket">
-    **$4/month** — For serious projects.
+    **$5/month** — For serious projects.
     - Unlimited sites
     - 100 GB storage
     - 5 GB max file size
@@ -40,7 +40,7 @@ SimpleHost offers two plans:
 | **Custom domains** | 1 | 5 |
 | **Handle** | No | Yes |
 | **API rate limit** | 60 req/hr | 200 req/hr |
-| **Price** | $0 | $4/month |
+| **Price** | $0 | $5/month |
 
 ## Anonymous Publishing Limits
 
@@ -55,14 +55,38 @@ Publishing without an API key has tighter limits:
 
 ## Upgrading
 
-You can upgrade to Hobby from your dashboard:
+You can upgrade to Hobby from the dashboard or directly from the terminal.
+
+### From the dashboard
 
 1. Go to [simplehost.dev/dashboard](https://simplehost.dev/dashboard)
 2. Click the **Plan** tab
 3. Click **Upgrade to Hobby**
-4. Complete payment via LemonSqueezy
+4. Complete payment via Razorpay
+
+### From the terminal
+
+```bash
+# Get a checkout URL
+curl -s -X POST https://simplehost.dev/api/billing/checkout \
+  -H "Authorization: Bearer sh_live_your_key_here"
+
+# Open the returned checkoutUrl in your browser to complete payment
+```
 
 Your limits are upgraded immediately after payment.
+
+## Managing Everything from the Terminal
+
+Every feature in SimpleHost can be managed from the terminal using curl commands -- no dashboard required:
+
+- **Account info:** `GET /api/v1/account` -- check your plan, usage, and limits
+- **Sites:** publish, update, list, delete, and duplicate sites via the API
+- **Custom domains:** add, verify, list, and remove domains via `GET/POST/DELETE /api/v1/domains`
+- **Handle:** claim, view, and release your vanity subdomain via `GET/PUT/DELETE /api/v1/handle`
+- **Billing:** upgrade and manage your subscription via `POST /api/billing/checkout` and `POST /api/billing/portal`
+
+See the [API Reference](/api-reference/overview) for full details on every endpoint.
 
 ## What Happens If You Hit a Limit?
 

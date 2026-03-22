@@ -1,0 +1,110 @@
+---
+title: "Billing"
+description: "Upgrade to Hobby and manage your subscription"
+---
+
+## Overview
+
+SimpleHost uses Razorpay for payment processing. You can upgrade to the Hobby plan ($5/mo) from the dashboard or directly from the terminal using the API.
+
+All billing endpoints require authentication.
+
+---
+
+## Create Checkout
+
+```
+POST /api/billing/checkout
+```
+
+Creates a Razorpay subscription for the Hobby plan and returns a checkout URL. This is the terminal-friendly way to upgrade -- call this endpoint and open the returned URL in your browser to complete payment.
+
+```bash
+curl -X POST https://simplehost.dev/api/billing/checkout \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "subscriptionId": "sub_abc123...",
+  "razorpayKeyId": "rzp_live_...",
+  "shortUrl": "https://rzp.io/i/abc123",
+  "checkoutUrl": "https://rzp.io/i/abc123"
+}
+```
+
+<ResponseField name="checkoutUrl" type="string">
+  Open this URL in a browser to complete payment. This is the same as `shortUrl`.
+</ResponseField>
+
+<ResponseField name="subscriptionId" type="string">
+  The Razorpay subscription ID. Used by the dashboard for the embedded checkout popup.
+</ResponseField>
+
+<Info>
+After payment is completed in the browser, your plan upgrades automatically via webhook. There is no need to call any additional endpoint.
+</Info>
+
+### Terminal workflow
+
+```bash
+# 1. Get the checkout URL
+CHECKOUT=$(curl -s -X POST https://simplehost.dev/api/billing/checkout \
+  -H "Authorization: Bearer sh_live_your_key_here" | jq -r '.checkoutUrl')
+
+# 2. Open it in the browser
+open "$CHECKOUT"   # macOS
+# xdg-open "$CHECKOUT"  # Linux
+
+# 3. Complete payment in the browser
+# Your plan upgrades automatically
+```
+
+---
+
+## Subscription Portal
+
+```
+POST /api/billing/portal
+```
+
+Returns your subscription management info, including a URL to manage your subscription on Razorpay.
+
+```bash
+curl -X POST https://simplehost.dev/api/billing/portal \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "portalUrl": "https://rzp.io/i/manage-abc123",
+  "status": "active",
+  "currentEnd": "2026-04-22T10:00:00.000Z"
+}
+```
+
+<ResponseField name="portalUrl" type="string">
+  URL to manage your subscription (cancel, update payment method, etc.).
+</ResponseField>
+
+<ResponseField name="status" type="string">
+  Current subscription status: `"active"`, `"halted"`, `"cancelled"`, etc.
+</ResponseField>
+
+<ResponseField name="currentEnd" type="string | null">
+  ISO 8601 timestamp of when the current billing period ends.
+</ResponseField>
+
+---
+
+## Errors
+
+| Code | Status | Description |
+|------|--------|-------------|
+| `UNAUTHORIZED` | 401 | Missing or invalid API key |
+| `INVALID_REQUEST` | 400 | Already on the Hobby plan (checkout) or no active subscription (portal) |
+| `INTERNAL_ERROR` | 500 | Razorpay API error |

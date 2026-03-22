@@ -37,7 +37,16 @@ Give me a live URL for this site
 
 The agent handles everything — scanning files, uploading, and returning a live URL.
 
-### Step 3: Authenticate (optional)
+### Permanent vs Temporary
+
+Before publishing, the agent will ask you to choose:
+
+- **With an API key** — your site is **permanent**. It stays live until you delete it.
+- **Without an API key** — your site is **temporary**. It expires in 24 hours automatically.
+
+If you just need a quick preview link, skip authentication. If you want a site that sticks around, authenticate first.
+
+### Step 3: Authenticate (for permanent sites)
 
 On first publish, the agent will ask for your email to get an API key. This makes your sites **permanent**. Without it, sites expire in 24 hours.
 

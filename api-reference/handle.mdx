@@ -1,0 +1,124 @@
+---
+title: "Handle"
+description: "Claim, view, and release your vanity subdomain"
+---
+
+## Overview
+
+A handle gives you a personalized URL at `yourname.simplehost.dev`. Handles are available on the **Hobby plan** ($5/mo) only.
+
+### Handle Rules
+
+- 3-30 characters long
+- Lowercase letters, numbers, and hyphens only
+- Cannot start or end with a hyphen
+- Must be unique across all users
+- Reserved names (www, api, app, admin, etc.) are not allowed
+
+All handle endpoints require authentication.
+
+---
+
+## Get Handle
+
+```
+GET /api/v1/handle
+```
+
+Returns your current handle.
+
+```bash
+curl -X GET https://simplehost.dev/api/v1/handle \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "handle": "yourname",
+  "url": "https://yourname.simplehost.dev/"
+}
+```
+
+If no handle is set:
+
+```json
+{
+  "handle": null,
+  "url": null
+}
+```
+
+---
+
+## Claim or Change Handle
+
+```
+PUT /api/v1/handle
+```
+
+Claims a new handle or changes your existing one. Requires the Hobby plan.
+
+<ParamField body="handle" type="string" required>
+  The handle to claim. Must be 3-30 characters, lowercase alphanumeric and hyphens, no leading/trailing hyphens.
+</ParamField>
+
+```bash
+curl -X PUT https://simplehost.dev/api/v1/handle \
+  -H "Authorization: Bearer sh_live_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"handle": "yourname"}'
+```
+
+### Response
+
+```json
+{
+  "handle": "yourname",
+  "url": "https://yourname.simplehost.dev/",
+  "message": "Handle claimed successfully"
+}
+```
+
+<Note>
+When you change your handle, the old one is released immediately and becomes available for others to claim.
+</Note>
+
+---
+
+## Release Handle
+
+```
+DELETE /api/v1/handle
+```
+
+Releases your current handle, making it available for others.
+
+```bash
+curl -X DELETE https://simplehost.dev/api/v1/handle \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "deleted": true,
+  "message": "Handle released"
+}
+```
+
+<Warning>
+Releasing your handle also removes all links associated with it. This action cannot be undone.
+</Warning>
+
+---
+
+## Errors
+
+| Code | Status | Description |
+|------|--------|-------------|
+| `UNAUTHORIZED` | 401 | Missing or invalid API key |
+| `PLAN_LIMIT` | 403 | Handles require the Hobby plan |
+| `INVALID_REQUEST` | 400 | Invalid handle format, reserved name, or already taken |

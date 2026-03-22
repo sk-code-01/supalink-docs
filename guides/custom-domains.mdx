@@ -10,7 +10,7 @@ You can point your own domain (or subdomain) to any SimpleHost site. SSL certifi
 | Plan | Custom Domains |
 |------|---------------|
 | Free | 1 |
-| Hobby ($4/mo) | 5 |
+| Hobby ($5/mo) | 5 |
 
 ## Setup
 
@@ -55,22 +55,42 @@ Not all DNS providers support this. If yours doesn't, use a subdomain like `www.
 
 SSL certificates are provisioned and renewed automatically through Cloudflare. You don't need to do anything — HTTPS just works once the domain is verified.
 
-## Managing Domains via API
+## Managing Domains from the Terminal
 
-You can also manage custom domains through the API:
+You can manage everything from the terminal -- no dashboard required.
+
+### Add a domain
 
 ```bash
-# List your domains
+curl -X POST https://simplehost.dev/api/v1/domains \
+  -H "Authorization: Bearer sh_live_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{"domain": "docs.mysite.com"}'
+```
+
+The response includes the exact DNS records you need to configure.
+
+### Verify DNS records
+
+After configuring DNS at your registrar, verify:
+
+```bash
+curl -X POST https://simplehost.dev/api/v1/domains/docs.mysite.com/verify \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### List your domains
+
+```bash
 curl -X GET https://simplehost.dev/api/v1/domains \
   -H "Authorization: Bearer sh_live_your_key_here"
+```
 
-# Add a domain
-curl -X POST https://simplehost.dev/api/v1/domains \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sh_live_your_key_here" \
-  -d '{"domain": "docs.mysite.com", "siteSlug": "bright-canvas-a7k2"}'
+### Remove a domain
 
-# Remove a domain
+```bash
 curl -X DELETE https://simplehost.dev/api/v1/domains/docs.mysite.com \
   -H "Authorization: Bearer sh_live_your_key_here"
 ```
+
+See the [Domains API reference](/api-reference/domains) for full request/response details.

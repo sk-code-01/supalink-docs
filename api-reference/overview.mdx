@@ -79,6 +79,36 @@ See [Rate Limits](/api-reference/rate-limits) for limits per plan.
 | `PATCH` | `/api/v1/publish/:slug/metadata` | [Update metadata](/api-reference/update-metadata) |
 | `POST` | `/api/v1/publish/:slug/claim` | [Claim anonymous site](/api-reference/claim-site) |
 
+### Account
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/account` | [Get account info and usage](/api-reference/account) |
+
+### Domains
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/domains` | [List all domains](/api-reference/domains#list-domains) |
+| `POST` | `/api/v1/domains` | [Add a domain](/api-reference/domains#add-a-domain) |
+| `POST` | `/api/v1/domains/:domain/verify` | [Verify DNS records](/api-reference/domains#verify-a-domain) |
+| `DELETE` | `/api/v1/domains/:domain` | [Remove a domain](/api-reference/domains#delete-a-domain) |
+
+### Handle
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/handle` | [Get current handle](/api-reference/handle#get-handle) |
+| `PUT` | `/api/v1/handle` | [Claim or change handle](/api-reference/handle#claim-or-change-handle) |
+| `DELETE` | `/api/v1/handle` | [Release handle](/api-reference/handle#release-handle) |
+
+### Billing
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/billing/checkout` | [Create checkout session](/api-reference/billing#create-checkout) |
+| `POST` | `/api/billing/portal` | [Manage subscription](/api-reference/billing#subscription-portal) |
+
 ### Authentication
 
 | Method | Endpoint | Description |

@@ -1352,7 +1352,7 @@
       "put": {
         "tags": ["Handle"],
         "summary": "Set or change handle",
-        "description": "Claims or changes the user's vanity handle (e.g., yourname.simplehost.dev). Requires the Hobby plan ($4/mo). Handle must be 3-30 characters, lowercase letters/numbers/hyphens, cannot start or end with a hyphen. Reserved names (www, api, app, admin, etc.) are not allowed.",
+        "description": "Claims or changes the user's vanity handle (e.g., yourname.simplehost.dev). Requires the Hobby plan ($5/mo). Handle must be 3-30 characters, lowercase letters/numbers/hyphens, cannot start or end with a hyphen. Reserved names (www, api, app, admin, etc.) are not allowed.",
         "operationId": "setHandle",
         "requestBody": {
           "required": true,

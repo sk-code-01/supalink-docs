@@ -1181,7 +1181,7 @@ Every API response includes rate limit information:
 |------|-------------------|
 | Anonymous (no API key) | 5 per IP address |
 | Free | 60 |
-| Hobby ($4/mo) | 200 |
+| Hobby ($5/mo) | 200 |
 
 The rate limit window is **1 hour**, aligned to the top of the hour.
 
@@ -1205,7 +1205,7 @@ File upload endpoints (`PUT /api/v1/_upload/*`) are **not rate limited**. They a
 
 ## Tips
 
-If you're hitting rate limits on the Free plan, consider upgrading to Hobby ($4/mo) for 200 requests per hour — more than enough for most workflows.
+If you're hitting rate limits on the Free plan, consider upgrading to Hobby ($5/mo) for 200 requests per hour — more than enough for most workflows.
 
 - Batch your operations where possible
 - Use hash deduplication to reduce the number of API calls when updating sites
@@ -1323,7 +1323,7 @@ You can point your own domain (or subdomain) to any SimpleHost site. SSL certifi
 | Plan | Custom Domains |
 |------|---------------|
 | Free | 1 |
-| Hobby ($4/mo) | 5 |
+| Hobby ($5/mo) | 5 |
 
 ## Setup
 
@@ -1396,7 +1396,7 @@ curl -X DELETE https://simplehost.dev/api/v1/domains/docs.mysite.com \
 
 A handle gives you a personalized URL at `yourname.simplehost.dev`. It's like a username for your SimpleHost profile.
 
-Handles are available on the **Hobby plan** ($4/mo) only.
+Handles are available on the **Hobby plan** ($5/mo) only.
 
 ## Setting Your Handle
 
@@ -1617,7 +1617,7 @@ SimpleHost offers two plans:
 - 1 custom domain
 - 60 API requests/hour
 
-**Hobby** — $4/month — For serious projects.
+**Hobby** — $5/month — For serious projects.
 - Unlimited sites
 - 100 GB storage
 - 5 GB max file size
@@ -1637,7 +1637,7 @@ SimpleHost offers two plans:
 | **Custom domains** | 1 | 5 |
 | **Handle** | No | Yes |
 | **API rate limit** | 60 req/hr | 200 req/hr |
-| **Price** | $0 | $4/month |
+| **Price** | $0 | $5/month |
 
 ## Anonymous Publishing Limits
 
@@ -1657,7 +1657,7 @@ You can upgrade to Hobby from your dashboard:
 1. Go to [simplehost.dev/dashboard](https://simplehost.dev/dashboard)
 2. Click the **Plan** tab
 3. Click **Upgrade to Hobby**
-4. Complete payment via LemonSqueezy
+4. Complete payment via Razorpay
 
 Your limits are upgraded immediately after payment.
 

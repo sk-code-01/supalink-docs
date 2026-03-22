@@ -62,6 +62,7 @@
       "pages": [
         "api-reference/overview",
         "api-reference/authentication",
+        "api-reference/account",
         "api-reference/publish",
         "api-reference/upload",
         "api-reference/finalize",
@@ -72,6 +73,9 @@
         "api-reference/duplicate-site",
         "api-reference/update-metadata",
         "api-reference/claim-site",
+        "api-reference/domains",
+        "api-reference/handle",
+        "api-reference/billing",
         "api-reference/errors",
         "api-reference/rate-limits"
       ]

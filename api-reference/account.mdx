@@ -1,0 +1,91 @@
+---
+title: "Account"
+description: "Get your account info, plan, and usage stats"
+---
+
+## Get Account Info
+
+Returns the authenticated user's account details, current plan, usage statistics, and plan limits.
+
+```
+GET /api/v1/account
+```
+
+### Authentication
+
+Requires an API key in the `Authorization` header.
+
+```bash
+curl -X GET https://simplehost.dev/api/v1/account \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "email": "you@example.com",
+  "plan": "free",
+  "handle": null,
+  "usage": {
+    "sites": {
+      "used": 12,
+      "limit": 500
+    },
+    "storage": {
+      "used": "1.2 GB",
+      "usedBytes": 1288490188,
+      "limit": "10 GB",
+      "limitBytes": 10737418240
+    },
+    "domains": {
+      "used": 0,
+      "limit": 1
+    }
+  },
+  "limits": {
+    "maxFileSize": "250 MB",
+    "maxFileSizeBytes": 262144000,
+    "maxSites": 500,
+    "maxStorage": "10 GB",
+    "maxDomains": 1
+  },
+  "createdAt": "2026-01-15T10:30:00.000Z"
+}
+```
+
+### Response Fields
+
+<ResponseField name="email" type="string">
+  The email address associated with your account.
+</ResponseField>
+
+<ResponseField name="plan" type="string">
+  Your current plan: `"free"` or `"hobby"`.
+</ResponseField>
+
+<ResponseField name="handle" type="string | null">
+  Your vanity handle (e.g., `"yourname"` for `yourname.simplehost.dev`), or `null` if not set.
+</ResponseField>
+
+<ResponseField name="usage" type="object">
+  Current usage across sites, storage, and domains. Each sub-object has `used` and `limit` fields.
+</ResponseField>
+
+<ResponseField name="limits" type="object">
+  Your plan's limits — max file size, max sites, max storage, and max domains.
+</ResponseField>
+
+<ResponseField name="createdAt" type="string">
+  ISO 8601 timestamp of when your account was created.
+</ResponseField>
+
+<Note>
+On the Hobby plan, `usage.sites.limit` returns `"unlimited"` instead of a number.
+</Note>
+
+### Errors
+
+| Code | Status | Description |
+|------|--------|-------------|
+| `UNAUTHORIZED` | 401 | Missing or invalid API key |

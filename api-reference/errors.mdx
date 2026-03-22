@@ -5,15 +5,18 @@ description: Error codes and response format
 
 ## Error Response Format
 
-All API errors return JSON with a consistent structure:
+All API errors return JSON with a consistent structure. Error messages are written in a conversational tone -- they tell you what went wrong and often include a `hint` field with a suggestion for how to fix it.
 
 ```json
 {
-  "error": "Description of what went wrong",
-  "code": "ERROR_CODE",
-  "status": 400
+  "error": "You've hit the limit of 1 custom domain(s) on your current plan. Remove one or upgrade for more.",
+  "code": "PLAN_LIMIT",
+  "status": 403,
+  "hint": "Upgrade to Hobby ($5/mo) for 5 domains."
 }
 ```
+
+Some errors also include contextual fields like `upgrade` with actionable next steps (e.g., a checkout endpoint to call).
 
 ## Error Codes
 

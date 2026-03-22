@@ -8,10 +8,12 @@ description: Get a personalized subdomain for your SimpleHost profile
 A handle gives you a personalized URL at `yourname.simplehost.dev`. It's like a username for your SimpleHost profile.
 
 <Note>
-Handles are available on the **Hobby plan** ($4/mo) only.
+Handles are available on the **Hobby plan** ($5/mo) only.
 </Note>
 
 ## Setting Your Handle
+
+### From the dashboard
 
 1. Go to [simplehost.dev/dashboard](https://simplehost.dev/dashboard)
 2. Click the **Handle** tab
@@ -20,25 +22,46 @@ Handles are available on the **Hobby plan** ($4/mo) only.
 
 ### Handle Rules
 
+- 3-30 characters long
 - Lowercase letters, numbers, and hyphens only
 - Cannot start or end with a hyphen
 - Must be unique across all users
-- Can be changed at any time (your old handle is released)
+- Reserved names (www, api, app, admin, etc.) are not allowed
+- Can be changed at any time (your old handle is released immediately)
 
 ## Using Your Handle
 
 Once set, your handle URL (`yourname.simplehost.dev`) is active. You can configure what it points to in the dashboard.
 
-## Managing via API
+## Managing from the Terminal
+
+You can manage your handle entirely from the terminal -- no dashboard required.
+
+### Get your current handle
 
 ```bash
-# Get your current handle
 curl -X GET https://simplehost.dev/api/v1/handle \
   -H "Authorization: Bearer sh_live_your_key_here"
+```
 
-# Set or update your handle
+### Claim or change your handle
+
+```bash
 curl -X PUT https://simplehost.dev/api/v1/handle \
-  -H "Content-Type: application/json" \
   -H "Authorization: Bearer sh_live_your_key_here" \
+  -H "Content-Type: application/json" \
   -d '{"handle": "yourname"}'
 ```
+
+### Release your handle
+
+```bash
+curl -X DELETE https://simplehost.dev/api/v1/handle \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+<Warning>
+Releasing your handle also removes all links associated with it. This cannot be undone.
+</Warning>
+
+See the [Handle API reference](/api-reference/handle) for full request/response details.
