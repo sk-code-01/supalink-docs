@@ -28,7 +28,6 @@
 ## Guides
 
 - [Publish with Script](https://docs.simplehost.dev/guides/publish-with-script): Use publish.sh to publish directories from the command line
-- [Custom Domains](https://docs.simplehost.dev/guides/custom-domains): Point your own domain to a SimpleHost site with automatic SSL
 - [Handle](https://docs.simplehost.dev/guides/handle): Get a personalized subdomain for your SimpleHost profile
 - [Anonymous Publishing](https://docs.simplehost.dev/guides/anonymous-publishing): Publish without an account, sites expire in 24 hours
 - [Hash Deduplication](https://docs.simplehost.dev/guides/hash-deduplication): Only upload changed files when updating a site

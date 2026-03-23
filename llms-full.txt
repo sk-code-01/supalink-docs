@@ -23,7 +23,6 @@ Every site gets a unique slug and is served from a global CDN via Cloudflare.
 - **Zero Config**: No build pipeline, no CI/CD setup, no server config. Just publish and go.
 - **Agent-Native**: Built for AI agents. Install the Claude Code skill and publish from any conversation.
 - **Hash Deduplication**: On updates, only changed files are uploaded. Unchanged files are copied server-side.
-- **Custom Domains**: Point your own domain to any SimpleHost site with automatic SSL.
 - **Anonymous Publishing**: No account needed. Publish anonymously with a 24-hour expiry. Claim later to keep it.
 
 ## How It Works
@@ -111,7 +110,6 @@ Only changed files are uploaded (hash deduplication). Unchanged files are copied
 
 ## Next steps
 
-- [Custom Domains](/guides/custom-domains): Point your own domain to your site.
 - [API Reference](/api-reference/overview): Build your own integration with the REST API.
 - [Agent Skill](/skill/overview): Let AI agents publish for you.
 - [Plans & Limits](/guides/plans-and-limits): Compare Free and Hobby plans.
@@ -1314,82 +1312,6 @@ You can use the script in any CI/CD pipeline:
 
 ---
 
-# Custom Domains
-
-## Overview
-
-You can point your own domain (or subdomain) to any SimpleHost site. SSL certificates are provisioned automatically.
-
-| Plan | Custom Domains |
-|------|---------------|
-| Free | 1 |
-| Hobby ($5/mo) | 5 |
-
-## Setup
-
-### Step 1: Add the domain in your dashboard
-
-1. Go to [simplehost.dev/dashboard](https://simplehost.dev/dashboard)
-2. Click the **Domains** tab
-3. Click **+ Add Domain**
-4. Enter your domain (e.g., `docs.mysite.com`)
-
-### Step 2: Configure DNS
-
-Add these DNS records at your domain registrar or DNS provider:
-
-#### CNAME Record
-
-| Type | Name | Target |
-|------|------|--------|
-| CNAME | `docs` (or your subdomain) | `proxy.simplehost.dev` |
-
-#### TXT Record (verification)
-
-| Type | Name | Value |
-|------|------|-------|
-| TXT | `_simplehost.docs` (or `_simplehost.yoursubdomain`) | The verification code shown in the dashboard |
-
-### Step 3: Wait for verification
-
-DNS changes can take up to 48 hours to propagate, but typically complete within a few minutes. The domain status in your dashboard will change from **Pending** to **Active** once verified.
-
-## Using a Root Domain
-
-For root/apex domains (e.g., `mysite.com` without a subdomain), you need a DNS provider that supports CNAME flattening or ALIAS records:
-
-- **Cloudflare** — Supports CNAME flattening (use CNAME at root)
-- **Route 53** — Use an ALIAS record
-- **DNSimple** — Use an ALIAS record
-
-Not all DNS providers support this. If yours doesn't, use a subdomain like `www.mysite.com` instead.
-
-## SSL Certificates
-
-SSL certificates are provisioned and renewed automatically through Cloudflare. You don't need to do anything — HTTPS just works once the domain is verified.
-
-## Managing Domains via API
-
-You can also manage custom domains through the API:
-
-```bash
-# List your domains
-curl -X GET https://simplehost.dev/api/v1/domains \
-  -H "Authorization: Bearer sh_live_your_key_here"
-
-# Add a domain
-curl -X POST https://simplehost.dev/api/v1/domains \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer sh_live_your_key_here" \
-  -d '{"domain": "docs.mysite.com", "siteSlug": "bright-canvas-a7k2"}'
-
-# Remove a domain
-curl -X DELETE https://simplehost.dev/api/v1/domains/docs.mysite.com \
-  -H "Authorization: Bearer sh_live_your_key_here"
-```
-
----
-
 # Handle
 
 ## What is a Handle?
@@ -1614,7 +1536,6 @@ SimpleHost offers two plans:
 - 10 GB storage
 - 250 MB max file size
 - 1,000 files per site
-- 1 custom domain
 - 60 API requests/hour
 
 **Hobby** — $5/month — For serious projects.
@@ -1622,7 +1543,6 @@ SimpleHost offers two plans:
 - 100 GB storage
 - 5 GB max file size
 - 1,000 files per site
-- 5 custom domains
 - 200 API requests/hour
 - Custom handle
 
@@ -1634,7 +1554,6 @@ SimpleHost offers two plans:
 | **Storage** | 10 GB | 100 GB |
 | **Max file size** | 250 MB | 5 GB |
 | **Files per site** | 1,000 | 1,000 |
-| **Custom domains** | 1 | 5 |
 | **Handle** | No | Yes |
 | **API rate limit** | 60 req/hr | 200 req/hr |
 | **Price** | $0 | $5/month |
@@ -1647,7 +1566,6 @@ Publishing without an API key has tighter limits:
 |---------|-------|
 | Rate limit | 5 requests/hour per IP |
 | Site expiry | 24 hours |
-| Custom domains | Not available |
 | Handle | Not available |
 
 ## Upgrading

@@ -14,7 +14,6 @@ SimpleHost offers two plans:
     - 10 GB storage
     - 250 MB max file size
     - 1,000 files per site
-    - 1 custom domain
     - 60 API requests/hour
   </Card>
   <Card title="Hobby" icon="rocket">
@@ -23,7 +22,6 @@ SimpleHost offers two plans:
     - 100 GB storage
     - 5 GB max file size
     - 1,000 files per site
-    - 5 custom domains
     - 200 API requests/hour
     - Custom handle
   </Card>
@@ -37,7 +35,6 @@ SimpleHost offers two plans:
 | **Storage** | 10 GB | 100 GB |
 | **Max file size** | 250 MB | 5 GB |
 | **Files per site** | 1,000 | 1,000 |
-| **Custom domains** | 1 | 5 |
 | **Handle** | No | Yes |
 | **API rate limit** | 60 req/hr | 200 req/hr |
 | **Price** | $0 | $5/month |
@@ -50,7 +47,6 @@ Publishing without an API key has tighter limits:
 |---------|-------|
 | Rate limit | 5 requests/hour per IP |
 | Site expiry | 24 hours |
-| Custom domains | Not available |
 | Handle | Not available |
 
 ## Upgrading
@@ -82,7 +78,6 @@ Every feature in SimpleHost can be managed from the terminal using curl commands
 
 - **Account info:** `GET /api/v1/account` -- check your plan, usage, and limits
 - **Sites:** publish, update, list, delete, and duplicate sites via the API
-- **Custom domains:** add, verify, list, and remove domains via `GET/POST/DELETE /api/v1/domains`
 - **Handle:** claim, view, and release your vanity subdomain via `GET/PUT/DELETE /api/v1/handle`
 - **Billing:** upgrade and manage your subscription via `POST /api/billing/checkout` and `POST /api/billing/portal`
 

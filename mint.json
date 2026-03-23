@@ -73,7 +73,6 @@
         "api-reference/duplicate-site",
         "api-reference/update-metadata",
         "api-reference/claim-site",
-        "api-reference/domains",
         "api-reference/handle",
         "api-reference/billing",
         "api-reference/errors",
@@ -84,7 +83,6 @@
       "group": "Guides",
       "pages": [
         "guides/publish-with-script",
-        "guides/custom-domains",
         "guides/handle",
         "guides/anonymous-publishing",
         "guides/hash-deduplication",

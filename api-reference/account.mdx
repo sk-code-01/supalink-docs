@@ -37,18 +37,13 @@ curl -X GET https://simplehost.dev/api/v1/account \
       "usedBytes": 1288490188,
       "limit": "10 GB",
       "limitBytes": 10737418240
-    },
-    "domains": {
-      "used": 0,
-      "limit": 1
     }
   },
   "limits": {
     "maxFileSize": "250 MB",
     "maxFileSizeBytes": 262144000,
     "maxSites": 500,
-    "maxStorage": "10 GB",
-    "maxDomains": 1
+    "maxStorage": "10 GB"
   },
   "createdAt": "2026-01-15T10:30:00.000Z"
 }
@@ -69,11 +64,11 @@ curl -X GET https://simplehost.dev/api/v1/account \
 </ResponseField>
 
 <ResponseField name="usage" type="object">
-  Current usage across sites, storage, and domains. Each sub-object has `used` and `limit` fields.
+  Current usage across sites and storage. Each sub-object has `used` and `limit` fields.
 </ResponseField>
 
 <ResponseField name="limits" type="object">
-  Your plan's limits — max file size, max sites, max storage, and max domains.
+  Your plan's limits — max file size, max sites, and max storage.
 </ResponseField>
 
 <ResponseField name="createdAt" type="string">
