@@ -7,13 +7,15 @@ description: Give your agent the ability to publish in under 30 seconds
 
 Install the SimpleHost skill and your agent can publish anything to the web.
 
-### Step 1: Install
+### Step 1: Install or refresh
 
 ```bash
 curl -fsSL https://simplehost.dev/install.sh | bash
 ```
 
-Or if you prefer npx: `npx skills add sk-code-01/simplehost-skill -g -y`
+If SimpleHost was already installed before, run the same command again to refresh to the latest version of the skill.
+
+Or if you prefer `npx`: `npx skills add sk-code-01/simplehost-skill -g -y`
 
 Works with **Claude Code**, **Cursor**, **Windsurf**, and any agent supporting the [Agent Skills](https://agentskills.io) standard.
 
@@ -40,6 +42,8 @@ Give me a live URL for this site
 The agent handles everything — scanning files, uploading, and returning a live URL.
 
 Your agent publishes instantly — no questions, no setup. If you don't have an API key, it publishes as a temporary link (expires in 24 hours). After publishing, the agent will offer to make it permanent for free.
+
+Newer versions of the skill also check for updates automatically, but the install command above is always the simplest way to refresh immediately.
 
 ### Step 3: Make it permanent (optional)
 
