@@ -21,6 +21,9 @@
 - [Delete a Site](https://docs.simplehost.dev/api-reference/delete-site): DELETE /api/v1/publish/:slug — permanently delete a site
 - [Duplicate a Site](https://docs.simplehost.dev/api-reference/duplicate-site): POST /api/v1/publish/:slug/duplicate — copy a site to a new slug
 - [Update Metadata](https://docs.simplehost.dev/api-reference/update-metadata): PATCH /api/v1/publish/:slug/metadata — update title, description, password, TTL
+- [Site Variables](https://docs.simplehost.dev/api-reference/site-variables): Store and manage encrypted secrets for a published site
+- [Proxy Host Allowlist](https://docs.simplehost.dev/api-reference/proxy-hosts): Approve which external hosts a site may call through the secure site proxy
+- [Site Proxy](https://docs.simplehost.dev/api-reference/site-proxy): Send secure browser requests through SimpleHost without exposing stored variables
 - [Claim a Site](https://docs.simplehost.dev/api-reference/claim-site): POST /api/v1/publish/:slug/claim — transfer anonymous site to your account
 - [Errors](https://docs.simplehost.dev/api-reference/errors): Error codes and response format
 - [Rate Limits](https://docs.simplehost.dev/api-reference/rate-limits): API rate limits per plan

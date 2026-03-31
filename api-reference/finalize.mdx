@@ -7,6 +7,8 @@ description: POST /api/v1/publish/:slug/finalize — Make a site live
 
 After uploading all files, call finalize to make the site live. The API verifies every file has been uploaded to storage before activating the version.
 
+Finalize also performs a security scan on browser-delivered files. If SimpleHost detects what looks like an exposed private key or secret in client-side code, finalize will block the publish instead of putting that site live publicly.
+
 ```
 POST /api/v1/publish/:slug/finalize
 ```
@@ -52,6 +54,57 @@ curl -X POST https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/finalize \
 
 The site is now live at the `siteUrl`.
 
+## Secure Publish Blocking
+
+If finalize detects exposed secret material in the uploaded site files, it returns `SECRET_DETECTED` and the site does not go live.
+
+This is intentional. Static browser files are public, so private keys should not be published inside them.
+
+### Example Blocked Response
+
+```json
+{
+  "error": "We detected what looks like exposed secret material in files that would be publicly accessible after publish.",
+  "code": "SECRET_DETECTED",
+  "status": 400,
+  "detectedSecrets": [
+    {
+      "path": "app.js",
+      "type": "stripe_test_key",
+      "line": 14,
+      "suggestedVariableName": "STRIPE_SECRET_KEY",
+      "suggestedProxyHosts": ["api.stripe.com"]
+    }
+  ],
+  "remediation": {
+    "suggestedVariableNames": ["STRIPE_SECRET_KEY"],
+    "suggestedProxyHosts": ["api.stripe.com"],
+    "steps": [
+      "Ask the user for permission to secure the key before publishing.",
+      "Store the key as a site variable.",
+      "Approve the required outbound host.",
+      "Update only the published output to use the site proxy.",
+      "Retry the publish."
+    ]
+  }
+}
+```
+
+## Recommended Agent Behavior
+
+If you are publishing through an agent, the expected flow is:
+
+1. Explain the issue in plain English
+2. Ask the user for permission to secure it
+3. If the user agrees:
+   - store the secret in site variables
+   - approve the required proxy host
+   - update only the published copy
+   - retry finalize
+4. If the user refuses, do not publish the site
+
+The goal is to keep the user's original local files untouched unless they explicitly ask for local code changes.
+
 ### Errors
 
 | Status | Code | Reason |
@@ -60,6 +113,7 @@ The site is now live at the `siteUrl`.
 | 401 | `UNAUTHORIZED` | Not authorized to finalize this site |
 | 400 | `INVALID_REQUEST` | `versionId` doesn't match the pending version |
 | 400 | `INVALID_REQUEST` | Not all files have been uploaded |
+| 400 | `SECRET_DETECTED` | Exposed private key or secret was found in public site files |
 
 <Warning>
 Finalize will fail if any file in the manifest hasn't been uploaded yet. Make sure all uploads complete before calling finalize.

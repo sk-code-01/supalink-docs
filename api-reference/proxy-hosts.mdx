@@ -1,0 +1,103 @@
+---
+title: Proxy Host Allowlist
+description: Approve which external hosts a site may call through the secure site proxy
+---
+
+## Overview
+
+Before a site can send a proxied request to an external API, that destination must be explicitly approved for that site.
+
+This allowlist keeps the proxy tightly scoped. A site can only send requests to exact hostnames you have approved.
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/publish/:slug/proxy-hosts` | List approved hostnames |
+| `PUT` | `/api/v1/publish/:slug/proxy-hosts` | Add one or more approved hostnames |
+| `DELETE` | `/api/v1/publish/:slug/proxy-hosts/:hostname` | Remove an approved hostname |
+
+## List Approved Hosts
+
+```
+GET /api/v1/publish/:slug/proxy-hosts
+```
+
+### Example
+
+```bash
+curl -s https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/proxy-hosts \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "hosts": [
+    {
+      "hostname": "api.openai.com",
+      "createdAt": "2026-03-31T10:20:00.000Z",
+      "updatedAt": "2026-03-31T10:20:00.000Z"
+    }
+  ]
+}
+```
+
+## Add Approved Hosts
+
+```
+PUT /api/v1/publish/:slug/proxy-hosts
+```
+
+### Example
+
+```bash
+curl -s -X PUT https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/proxy-hosts \
+  -H "Authorization: Bearer sh_live_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "hosts": ["api.openai.com", "api.stripe.com"]
+  }'
+```
+
+### Response
+
+```json
+{
+  "ok": true,
+  "stored": [
+    "api.openai.com",
+    "api.stripe.com"
+  ]
+}
+```
+
+## Remove Approved Host
+
+```
+DELETE /api/v1/publish/:slug/proxy-hosts/:hostname
+```
+
+### Example
+
+```bash
+curl -s -X DELETE https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/proxy-hosts/api.openai.com \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "ok": true,
+  "deleted": "api.openai.com"
+}
+```
+
+## Rules
+
+- Only exact hostnames are allowed
+- Only HTTPS destinations are supported
+- Use the narrowest possible set of hosts for each site
+- Do not add wildcard-style hostnames

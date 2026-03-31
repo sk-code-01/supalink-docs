@@ -17,6 +17,7 @@ All API errors return JSON with a consistent structure. Error messages are writt
 ```
 
 Some errors also include contextual fields like `upgrade` with actionable next steps (e.g., a checkout endpoint to call).
+Some publishing errors also include structured remediation details so an agent can recover safely.
 
 ## Error Codes
 
@@ -32,6 +33,7 @@ Some errors also include contextual fields like `upgrade` with actionable next s
 | `STORAGE_EXCEEDED` | 413 | Total storage quota exceeded (10 GB free, 100 GB hobby) |
 | `SITE_LIMIT_EXCEEDED` | 403 | Maximum site count reached (500 for free plan) |
 | `PLAN_LIMIT` | 403 | Feature not available on current plan |
+| `SECRET_DETECTED` | 400 | Finalize found exposed private keys or secrets in files that would be publicly visible |
 | `INTERNAL_ERROR` | 500 | Unexpected server error |
 
 ## Common Scenarios
@@ -83,3 +85,35 @@ Some errors also include contextual fields like `upgrade` with actionable next s
 ```
 
 **Fix:** File paths must be relative (no leading `/`), cannot contain `..`, and must be under 500 characters.
+
+### Exposed Secret Detected During Publish
+
+```json
+{
+  "error": "We detected what looks like exposed secret material in files that would be publicly accessible after publish.",
+  "code": "SECRET_DETECTED",
+  "status": 400,
+  "detectedSecrets": [
+    {
+      "path": "app.js",
+      "type": "openai_api_key",
+      "line": 22,
+      "suggestedVariableName": "OPENAI_API_KEY",
+      "suggestedProxyHosts": ["api.openai.com"]
+    }
+  ],
+  "remediation": {
+    "suggestedVariableNames": ["OPENAI_API_KEY"],
+    "suggestedProxyHosts": ["api.openai.com"],
+    "steps": [
+      "Ask the user for permission to secure the key before publishing.",
+      "Store the key as a site variable.",
+      "Approve the required outbound host.",
+      "Update only the published output to use the site proxy.",
+      "Retry the publish."
+    ]
+  }
+}
+```
+
+**Fix:** Do not publish the site as-is. Ask the user for permission, move the secret into [Site Variables](/api-reference/site-variables), approve the destination in [Proxy Host Allowlist](/api-reference/proxy-hosts), update only the published output to use the [Site Proxy](/api-reference/site-proxy), and then retry finalize.

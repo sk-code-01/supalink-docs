@@ -25,6 +25,24 @@ Your AI agent gains a new ability: turning any files into a live website. Just t
 
 The agent handles **everything**: file scanning, hashing, uploading, authentication, error handling, and retries.
 
+## Safe publishing for non-technical users
+
+If the agent finds a private key or secret in website files during publish, it should not just fail with a technical error and it should not publish the site as-is.
+
+Instead, the expected experience is:
+
+1. The agent explains the issue in simple language
+2. The agent reassures the user that original local files will stay untouched
+3. The agent asks permission to secure it before publishing
+4. If the user agrees, the agent secures the published version and retries
+5. If the user refuses, the agent does not publish
+
+The tone should be calm, friendly, and clear because many users will not be technical.
+
+Example:
+
+> "I found a private key in your website files. If I publish it like this, other people could see it and misuse it. I can secure it for you before publishing, and I will not change your original project files. Would you like me to do that?"
+
 ## One install, every project
 
 The skill installs globally. Every project, every conversation, every agent session — it just works. Your agent always has the ability to publish.

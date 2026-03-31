@@ -279,7 +279,19 @@ See [Rate Limits](/api-reference/rate-limits) for limits per plan.
 | `DELETE` | `/api/v1/publish/:slug` | [Delete a site](/api-reference/delete-site) |
 | `POST` | `/api/v1/publish/:slug/duplicate` | [Duplicate a site](/api-reference/duplicate-site) |
 | `PATCH` | `/api/v1/publish/:slug/metadata` | [Update metadata](/api-reference/update-metadata) |
+| `GET` | `/api/v1/publish/:slug/variables` | [List site variables](/api-reference/site-variables) |
+| `PUT` | `/api/v1/publish/:slug/variables` | [Store site variables](/api-reference/site-variables) |
+| `DELETE` | `/api/v1/publish/:slug/variables/:name` | [Delete a site variable](/api-reference/site-variables) |
+| `GET` | `/api/v1/publish/:slug/proxy-hosts` | [List approved proxy hosts](/api-reference/proxy-hosts) |
+| `PUT` | `/api/v1/publish/:slug/proxy-hosts` | [Add approved proxy hosts](/api-reference/proxy-hosts) |
+| `DELETE` | `/api/v1/publish/:slug/proxy-hosts/:hostname` | [Remove an approved proxy host](/api-reference/proxy-hosts) |
 | `POST` | `/api/v1/publish/:slug/claim` | [Claim anonymous site](/api-reference/claim-site) |
+
+### Secure Browser Requests
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/v1/proxy/:slug` | [Send a secure proxied request for a site](/api-reference/site-proxy) |
 
 ### Authentication
 

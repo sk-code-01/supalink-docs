@@ -82,6 +82,34 @@ Agent: ✅ Done! Your site is now permanent.
        From now on, all publishes are permanent automatically.
 ```
 
+### Publish blocked because a private key was found
+
+```text
+You: "Publish this site"
+
+Agent: I found a private key in your website files. If I publish it like this,
+       other people could see it and misuse it.
+
+       I can secure it for you before publishing, and I will not change your
+       original project files. Would you like me to do that?
+
+You: "yes"
+
+Agent: Perfect. I’m securing that for you now and publishing a safe version of
+       your site. Your original files will stay untouched.
+
+       ✅ Published safely!
+       🔗 https://bright-canvas-a7k2.simplehost.dev/
+```
+
+### If the user says no
+
+```text
+Agent: I can’t safely publish this version because it contains private keys
+       that would be publicly visible. If you want, I can secure it first and
+       then publish it for you.
+```
+
 ## Auto-Detection
 
 When you don't specify a directory, the skill looks for common build outputs:
@@ -103,3 +131,4 @@ Set `SIMPLEHOST_API_KEY` in your shell profile so the skill can publish permanen
 - The skill remembers the slug from the last publish in the conversation, so "update my site" works without specifying the slug again
 - You can publish single files too — the skill creates a temporary directory automatically
 - The skill works with any file type: HTML, images, PDFs, videos, ZIP files, etc.
+- If a publish is blocked because a secret was detected, the agent should explain it in plain language and ask permission before securing anything

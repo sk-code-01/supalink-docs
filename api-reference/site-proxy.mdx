@@ -1,0 +1,86 @@
+---
+title: Site Proxy
+description: Send secure browser requests through SimpleHost without exposing stored site variables
+---
+
+## Overview
+
+The site proxy lets a published site call approved external APIs without exposing stored secrets in client-side files.
+
+This endpoint is public because it is used by the browser, but it is tightly restricted:
+
+- only exact approved hosts are allowed
+- only HTTPS targets are allowed
+- stored secrets are substituted server-side
+- raw stored secret values are never returned by the management API
+
+## Endpoint
+
+```
+POST /api/v1/proxy/:slug
+```
+
+## Path Parameters
+
+<ParamField path="slug" type="string" required>
+  The site slug making the request.
+</ParamField>
+
+## Request Body
+
+<ParamField body="url" type="string" required>
+  The full HTTPS URL to call. The hostname must already be approved for this site.
+</ParamField>
+
+<ParamField body="method" type="string">
+  HTTP method to send. Defaults to `GET`.
+</ParamField>
+
+<ParamField body="headers" type="object">
+  Optional headers. Use `{{VARIABLE_NAME}}` placeholders where a stored secret should be inserted.
+</ParamField>
+
+<ParamField body="body" type="string">
+  Optional request body. This may also contain `{{VARIABLE_NAME}}` placeholders.
+</ParamField>
+
+## Example
+
+```bash
+curl -s -X POST https://simplehost.dev/api/v1/proxy/bright-canvas-a7k2 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://api.openai.com/v1/responses",
+    "method": "POST",
+    "headers": {
+      "Authorization": "Bearer {{OPENAI_API_KEY}}",
+      "Content-Type": "application/json"
+    },
+    "body": "{\"model\":\"gpt-4.1-mini\",\"input\":\"hello\"}"
+  }'
+```
+
+## Response
+
+The proxy returns the upstream response status and body, subject to SimpleHost safety checks and response header filtering.
+
+## Rules
+
+- The destination hostname must be on the site's allowlist
+- Only HTTPS URLs are accepted
+- Secret values must be referenced using `{{VARIABLE_NAME}}`
+- Do not hardcode private keys into browser files
+
+## Intended Flow
+
+This endpoint is designed to work with the secure publish flow:
+
+1. A publish is blocked because exposed secrets were detected in browser files
+2. The agent explains the issue to the user in plain language
+3. The user gives permission to secure it
+4. The agent stores the secret as a site variable
+5. The agent approves the exact outbound host
+6. The agent updates only the published copy to use this proxy
+7. The agent republishes safely
+
+For a full explanation of the blocked-publish behavior, see [Finalize](/api-reference/finalize) and [Errors](/api-reference/errors).

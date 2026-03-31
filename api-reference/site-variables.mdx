@@ -1,0 +1,126 @@
+---
+title: Site Variables
+description: Store and manage encrypted secrets for a published site
+---
+
+## Overview
+
+Site variables let you store private values, such as API keys, on a site without shipping them in browser files.
+
+These values are:
+
+- encrypted at rest
+- scoped to a single site
+- never returned in plaintext after saving
+- only manageable by the site owner
+
+This is primarily designed for agent-assisted publishing. If a publish is blocked because SimpleHost detects exposed secrets in client files, the agent can ask the user for permission, move the secret into site variables, and publish a safe version instead.
+
+## Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `GET` | `/api/v1/publish/:slug/variables` | List stored variable names and metadata |
+| `PUT` | `/api/v1/publish/:slug/variables` | Store one or more variables |
+| `DELETE` | `/api/v1/publish/:slug/variables/:name` | Delete a variable |
+
+## List Variables
+
+```
+GET /api/v1/publish/:slug/variables
+```
+
+Returns variable names and timestamps only. Secret values are never returned.
+
+### Example
+
+```bash
+curl -s https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/variables \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "variables": [
+    {
+      "name": "OPENAI_API_KEY",
+      "createdAt": "2026-03-31T10:10:00.000Z",
+      "updatedAt": "2026-03-31T10:10:00.000Z"
+    },
+    {
+      "name": "STRIPE_SECRET_KEY",
+      "createdAt": "2026-03-31T10:12:00.000Z",
+      "updatedAt": "2026-03-31T10:15:00.000Z"
+    }
+  ]
+}
+```
+
+## Store Variables
+
+```
+PUT /api/v1/publish/:slug/variables
+```
+
+Accepts a JSON object where each key is the variable name and each value is the secret to store.
+
+### Example
+
+```bash
+curl -s -X PUT https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/variables \
+  -H "Authorization: Bearer sh_live_your_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "OPENAI_API_KEY": "sk-...",
+    "STRIPE_SECRET_KEY": "sk_live_..."
+  }'
+```
+
+### Response
+
+```json
+{
+  "ok": true,
+  "stored": [
+    "OPENAI_API_KEY",
+    "STRIPE_SECRET_KEY"
+  ]
+}
+```
+
+## Delete Variable
+
+```
+DELETE /api/v1/publish/:slug/variables/:name
+```
+
+### Example
+
+```bash
+curl -s -X DELETE https://simplehost.dev/api/v1/publish/bright-canvas-a7k2/variables/OPENAI_API_KEY \
+  -H "Authorization: Bearer sh_live_your_key_here"
+```
+
+### Response
+
+```json
+{
+  "ok": true,
+  "deleted": "OPENAI_API_KEY"
+}
+```
+
+## Naming Rules
+
+- Use uppercase names such as `OPENAI_API_KEY`
+- Start with a letter
+- Use only letters, numbers, and underscores
+- Keep names short and descriptive
+
+## Security Notes
+
+- Do not paste stored variable values back into HTML, JS, or JSON files
+- Site variables are meant to be referenced from the secure site proxy, not exposed directly to the browser
+- If a user refuses the secure rewrite flow, the site should not be published with exposed secrets
