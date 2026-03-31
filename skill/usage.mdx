@@ -110,6 +110,29 @@ Agent: I can’t safely publish this version because it contains private keys
        then publish it for you.
 ```
 
+### Ask a product question
+
+```text
+You: "Where do I manage secrets in the dashboard?"
+
+Agent: Open the Sites page, find your site, click the three dots on the right,
+       then choose Manage Secrets.
+
+       That opens the Secrets & Proxy panel for that site, where you can store
+       secret values and approve which external hosts the site can connect to.
+```
+
+```text
+You: "Why was my publish blocked?"
+
+Agent: SimpleHost found something in your website files that looks like a
+       private key. Because website files are public, it blocked the publish
+       to keep that key from being exposed.
+
+       If you want, I can secure it for publishing without changing your
+       original local files.
+```
+
 ## Auto-Detection
 
 When you don't specify a directory, the skill looks for common build outputs:

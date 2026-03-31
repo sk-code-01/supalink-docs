@@ -25,6 +25,8 @@ Your AI agent gains a new ability: turning any files into a live website. Just t
 
 The agent handles **everything**: file scanning, hashing, uploading, authentication, error handling, and retries.
 
+It can also act like a SimpleHost product assistant, not just a deploy button. That means the agent can answer SimpleHost questions, explain errors, and guide users through the dashboard in plain language.
+
 ## Safe publishing for non-technical users
 
 If the agent finds a private key or secret in website files during publish, it should not just fail with a technical error and it should not publish the site as-is.
@@ -42,6 +44,17 @@ The tone should be calm, friendly, and clear because many users will not be tech
 Example:
 
 > "I found a private key in your website files. If I publish it like this, other people could see it and misuse it. I can secure it for you before publishing, and I will not change your original project files. Would you like me to do that?"
+
+## Docs-aware support
+
+The skill is designed to use the SimpleHost docs as its knowledge source for product questions. So if a user asks things like:
+
+- "How do anonymous sites work?"
+- "Where do I manage secrets?"
+- "Why did my publish fail?"
+- "What does this plan include?"
+
+the agent should answer in simple language first, then point to the relevant docs page if needed.
 
 ## One install, every project
 
